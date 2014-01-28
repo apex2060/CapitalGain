@@ -1,0 +1,35 @@
+<div class="modal fade" id="corpStatsModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Merger Bonuses</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>{{game.category.title}}</th>
+							<th>Cost</th>
+							<th>Majority Bonus</th>
+							<th>Minority Bonus</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="corp in game.category.corporations | orderBy:'cost'" 
+						title="{{corp.title}}"
+						style="background-color:{{corp.background}}; color:{{corp.font}};">
+						<td>{{corp.symbol}}</td>
+						<td>{{tools.corp.value(corp).cost | currency}}</td>
+						<td>{{tools.corp.value(corp).majority | currency}}</td>
+						<td>{{tools.corp.value(corp).minority | currency}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="close" data-dismiss="modal">Close</button>
+		</div>
+	</div>
+</div>
+</div>
+<!-- 360-736-2803 -->

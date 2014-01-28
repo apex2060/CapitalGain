@@ -1,0 +1,45 @@
+<div class="modal fade" id="mergeCorpModal" ng-class="{'minModal': tools.display.minModal()}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">Form a Merger</h4>
+			</div>
+			<div class="modal-body willMin">
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>{{game.category.title}}</th>
+							<th>Size</th>
+							<th>Cost</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="corp in game.mergers | orderBy:'cost'" 
+							ng-click="tools.merge.corp(corp, me())" 
+							title="Keep: {{corp.title}}"
+							style="background-color:{{corp.background}}; color:{{corp.font}};">
+							<!-- <td>{{corp.stock}}</td> -->
+							<td>{{corp.title}}</td>
+							<td>{{tools.corp.tiles(corp.i).length}}</td>
+							<td>${{tools.corp.value(corp, 'cost')}}</td>
+						</tr>
+					</tbody>
+				</table>
+			<div ng-include="'partials/game/playerStock.html'" class="willMin"></div>
+		</div>
+		<div class="modal-footer willMin" style="text-align:left;">
+			<p>Click on the {{game.category.title}} you would like to keep on the board.
+				<br>The players who own stock in the {{game.category.title}} that leaves will be able to:</p>
+			<ul>
+				<li>Receive majority/minority bonuses</li>
+				<li>Sell their stock at it's current rate</li>
+				<li>Trade 2 of their stock for 1 in the {{game.category.title}} that stays</li>
+			</ul>
+			<p>The price of stock for the {{game.category.title}} that stays will probably increase.
+				<br>All tiles of the merging companies will become part of the {{game.category.title}} that stays.</p>
+		</div>
+	</div>
+</div>
+</div>
+<!-- 360-736-2803 -->

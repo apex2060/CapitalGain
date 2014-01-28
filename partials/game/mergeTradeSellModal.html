@@ -1,0 +1,73 @@
+<div class="modal" id="mergeTradeSellModal" ng-class="{'minModal': tools.display.minModal()}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">Merger Settlement</h4>
+			</div>
+			<div class="modal-body willMin">
+				<p>A merger was formed wherein {{tools.merge.leaving().title}} was disolved into {{tools.merge.staying().title}}. 
+					<br><span ng-bind-html-unsafe="game.merger.message"></span>
+					<br>The purchase price for {{tools.merge.leaving().title}}&apos;s stock is: {{tools.corp.value(tools.merge.leaving()).cost | currency}}.
+					<br>You may sell your shares at this price, or trade 2 for 1 (while stocks last).
+					<br>Sales and trades will be made in order starting with the person who formed the merger.
+				</p>
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>Merged</th>
+							<th>Price</th>
+							<th>Acquisitor</th>
+							<th># Stocks</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="background:{{tools.merge.leaving().background}};color:{{tools.merge.leaving().font}};">
+								<span>{{tools.merge.leaving().title}}</span>
+							</td>
+							<td style="background:{{tools.merge.leaving().background}};color:{{tools.merge.leaving().font}};">
+								<span>{{tools.corp.value(tools.merge.leaving()).cost | currency}}</span>
+							</td>
+							<td style="background:{{tools.merge.staying().background}};color:{{tools.merge.staying().font}};">
+								<span>{{tools.merge.staying().title}}</span>
+							</td>
+							<td style="background:{{tools.merge.staying().background}};color:{{tools.merge.staying().font}};" class="help" title="you own - available">
+								<span>{{tools.player.stockCt(me(), tools.merge.staying())}} - {{tools.merge.staying().stock}}</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>Player</th>
+							<th>Stocks Owned</th>
+							<th>Trade/Sell/End</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="player in game.players" title="{{player.name}}" style="{{tools.player.style(player)}}">
+							<td>{{player.name}}</td>
+							<td>{{tools.player.stockCt(player, tools.merge.leaving())}}</td>
+
+							<td ng-show="me().objectId!=player.objectId && player.i == game.merger.turn">Transacting...</td> <!-- Placeholder td -->
+							<td ng-show="player.i != game.merger.turn">&nbsp;</td> <!-- Placeholder td -->
+							<td ng-show="me().objectId==player.objectId && me().i == game.merger.turn">
+								<a class="btn btn-info" title="Trade 2/1" ng-click="tools.merge.trade(me())"><i class="fa fa-code-fork fa-rotate-270"></i></a>
+								<a class="btn btn-success" title="Sell" ng-click="tools.merge.sell(me())"><i class="fa fa-dollar"></i></a>
+								<a class="btn btn-warning" title="Finalize My Settlement" ng-click="tools.merge.nextTurn()">
+									<i class="fa fa-share fa-rotate-90"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer willMin" style="text-align:left;">
+				<p>This will close once everyone has made their transactions.</p>
+			</div>
+		</div>
+	</div>
+</div>

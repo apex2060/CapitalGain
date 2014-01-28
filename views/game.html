@@ -1,0 +1,59 @@
+<div ng-controller="GameCtrl">
+	<div ng-include="'partials/game/nav.html'"></div>
+
+	<div class="container full">
+		<div class="row" ng-hide="me()==undefined">
+			<div class="col-xs-12 col-md-3">
+				<div ng-include="'partials/game/playerStats.html'"></div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				<div ng-include="'partials/game/playerStock.html'"></div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-3">
+				<div ng-include="'partials/game/turnActivity.html'"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div ng-include="'partials/game/turn.html'"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-9">
+				<div ng-include="'partials/game/board.html'"></div>
+			</div>
+			<div id="sidebar" class="col-xs-12 col-md-3">
+				<ul class="nav nav-tabs">
+					<li><a href="#player-list" data-toggle="tab">Players</a></li>
+					<li><a href="#corp-stats" data-toggle="tab">{{game.category.title}}</a></li>
+					<li><a href="#history" data-toggle="tab">History</a></li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="player-list">
+						<div ng-include="'partials/game/playerList.html'"></div>
+					</div>
+					<div class="tab-pane" id="corp-stats">
+						<div ng-include="'partials/game/corpStats.html'"></div>
+					</div>
+					<div class="tab-pane" id="history">
+						<div ng-include="'partials/game/history.html'"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-include="'partials/game/rtc.html'"></div>
+	</div>
+	<div ng-include="'partials/game/setupModal.html'"></div>
+	<div ng-include="'partials/game/pendingModal.html'"></div>
+	<div ng-include="'partials/game/placeCorpModal.html'"></div>
+	<div ng-include="'partials/game/mergeCorpModal.html'"></div>
+	<div ng-include="'partials/game/mergeTradeSellModal.html'"></div>
+	<div ng-include="'partials/game/settleEndModal.html'"></div>
+	<div ng-include="'partials/game/playerSettingsModal.html'"></div>
+	<div ng-include="'partials/game/corpStatsModal.html'"></div>
+	<div ng-include="'partials/game/instructionsModal.html'"></div>
+	<div ng-include="'partials/game/fullStatsModal.html'"></div>
+	<div ng-include="'partials/corp/addModal.html'"></div>
+</div>

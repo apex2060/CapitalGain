@@ -1,0 +1,125 @@
+body{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.center, .tile{
+	text-align: center;
+}
+.help{
+	cursor: help;
+}
+.hand, [ng-click]{
+	cursor: pointer;
+}
+.fa-trash-o{
+	color: #900;
+}
+.fa-pencil{
+	color: #F90;
+}
+
+
+.navbar>div>ul>li>a:hover, .navbar>div>ul>li.active>a:hover, .active{
+	padding-bottom:13px;
+	border-bottom: 2px solid #09F;
+}
+.navbar>div>ul.nav-tabs>li>a:hover, .navbar>div>ul.nav-tabs>li.active>a:hover, .active{
+	padding-bottom: 0px;
+}
+
+.small{
+	font-size: .9em;
+}
+
+
+/*Board*/
+#board td{
+	padding-top:15px;
+	padding-bottom:15px;
+	font-size: small;
+}
+
+.info{
+	min-height: 20px;
+	padding: 15px;
+	margin-bottom: 20px;
+	border-radius: 1px;
+}.info h1 {
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+
+#playerStats{
+	min-height: 200px;
+	margin-bottom: 10px;
+}
+#playerStats .money{
+	display: block;
+	padding: 10px;
+	margin: 5px 0px 14px;
+	background: #FFF;
+	color: green;
+	font-size: 22px;
+	border-radius: 5px;
+	box-shadow: 5px 5px 15px #000;
+}
+#history-list{
+	max-height: 200px;
+	overflow: auto;
+}
+	#history-list ul{
+		list-style: none;
+	}
+
+
+/*Modals*/
+.minModal .modal-dialog{
+	opacity:0.5 !important;
+}
+.minModal .willMin{
+	display: none;
+}
+
+
+/*Overrides*/
+.container.full {
+	max-width: none;
+}
+.row>*{
+	z-index: 500;
+}
+
+.purchaseCard.card h1{
+	background: #CCC;
+	color: #000;
+}.purchaseCard.card ul{
+	margin-left: -15px;
+}.purchaseCard.card li{
+	padding: 5px;
+}.purchaseCard.card li i{
+	margin-top: 2px;
+}.purchaseCard.card > .btn{
+	margin-left: -8px;
+}
+
+
+#remoteVideos video {
+	height: 150px;
+}
+#localVideo {
+	height: 150px;
+	border-radius: 10px;
+}
+
+
+@media (max-width: 992px ) {
+	.turn ul li a span{
+		display: block;
+		padding: 5px;
+	}
+}

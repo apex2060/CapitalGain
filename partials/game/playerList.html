@@ -1,0 +1,51 @@
+<table class="table">
+	<thead>
+		<tr class="dark">
+			<th colspan="2" class="center" ng-dblclick="tools.ai.allKnowing(1)">Players</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="player in game.players" 
+			title="{{player.name}}"
+			style="{{tools.player.style(player)}}">
+			<td>{{player.name}}</td>
+			<td>
+				<div ng-show="tools.player.isHost(me()) || tools.player.isOwner()">
+					<a class="btn" ng-class="{'btn-info':!player.isComputer, 'btn-success':player.isComputer}" title="Set to auto-pilot" ng-click="tools.player.toggleComputer(player)"><i class="fa fa-laptop"></i></a>
+					<a class="btn btn-warning" title="Edit player info" ng-click="tools.player.edit(player)"><i class="fa fa-pencil"></i></a>
+					<a class="btn btn-danger" title="Remove this person from the game" ng-click="tools.player.remove(player)"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</td>
+		</tr>
+		<tr class="dark" ng-show="game.pending && game.pending.length">
+			<td colspan="2" class="center">Pending Players</td>
+		</tr>
+		<tr ng-repeat="player in game.pending" 
+			title="{{player.name}} - Waiting Your Approval"
+			style="{{tools.player.style(player)}}">
+			<td>{{player.name}}</td>
+			<td>
+				<div ng-show="tools.player.isMyTurn(me())">
+					<a class="btn btn-success" title="Let this person play" ng-click="tools.player.approve($index)"><i class="fa fa-check-square"></i></a>
+					<a class="btn btn-danger" title="Remove this person from the game" ng-click="tools.player.reject($index)"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr class="warning">
+			<th colspan="2">
+				<a class="btn btn-info btn-block" 
+					ng-click="tools.rtc.join(gameId)" 
+					ng-show="tools.player.me()"><i class="fa fa-users"></i> Video Chat</a>
+			</th>
+		</tr>
+		<tr class="warning">
+			<td colspan="2">
+				<a class="btn btn-success btn-block" 
+					ng-click="tools.player.add()" 
+					ng-show="(tools.player.isHost(me()) || tools.player.isOwner()) && tools.player.isMyTurn(me())">Add Computer</a>
+			</td>
+		</tr>
+	</tfoot>
+</table>

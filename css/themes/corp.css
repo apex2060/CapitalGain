@@ -1,0 +1,64 @@
+body{
+	background: #f2f6f8; /* Old browsers */
+	background: -moz-linear-gradient(-45deg, #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(-45deg, #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(-45deg, #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(-45deg, #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* IE10+ */
+	background: linear-gradient(135deg, #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+nav.navbar{
+	background: #000;
+}
+
+.dark {
+	background: #000;
+	color: #5B8BEA;
+}
+.info{
+	color: #FFF;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.cards .card {
+	border: 1px solid #12264B;
+	color: #FFF;
+}
+.info, .cards .card{
+	background: #f0b7a1; /* Old browsers */
+	background: -moz-linear-gradient(top, #f0b7a1 0%, #8c3310 16%, #752201 28%, #bf6e4e 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0b7a1), color-stop(16%,#8c3310), color-stop(28%,#752201), color-stop(100%,#bf6e4e)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f0b7a1 0%,#8c3310 16%,#752201 28%,#bf6e4e 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f0b7a1 0%,#8c3310 16%,#752201 28%,#bf6e4e 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f0b7a1 0%,#8c3310 16%,#752201 28%,#bf6e4e 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f0b7a1 0%,#8c3310 16%,#752201 28%,#bf6e4e 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0b7a1', endColorstr='#bf6e4e',GradientType=0 ); /* IE6-9 */
+}
+
+nav.navbar.turn{
+	background: #b5c6d0;
+}nav.navbar.turn a{
+	color: #000;
+}
+#board{
+	background: #CCC;
+	border-bottom: 1px solid #10004E;
+	border-left: 1px solid #10004E;
+}
+#board td{
+	border-top: 1px solid #10004E;
+	border-right: 1px solid #10004E;
+	color: #10004E;
+}
+.onBoard{
+	background: #777;
+	color: #FFF;
+}
+.myTile{
+	box-shadow: inset 0px 0px 10px #000;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 10px #FF0;
+}

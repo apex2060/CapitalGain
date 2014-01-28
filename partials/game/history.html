@@ -1,0 +1,19 @@
+<table class="table">
+	<thead>
+		<tr class="dark">
+			<th colspan="2" class="center" ng-dblclick="tools.ai.allKnowing(1)">Players</th>
+		</tr>
+	</thead>
+	<tbody id="history-list">
+		<tr ng-repeat="history in game.history" 
+			title="{{tools.player.get(history.player).name}}"
+			style="{{tools.player.style(history.player)}}">
+			<td>{{tools.player.get(history.player).name}}</td>
+			<td>
+				<ul>
+					<li ng-repeat="message in history.messages">{{message}}</li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>

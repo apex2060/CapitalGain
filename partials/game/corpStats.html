@@ -1,0 +1,22 @@
+<table class="table" ng-click="tools.corp.corpStatsModal()">
+	<thead>
+		<!-- <tr class="success">
+			<th colspan="3" class="center">{{game.category.title}}</th>
+		</tr> -->
+		<tr class="dark">
+			<th>Stocks</th>
+			<th>{{game.category.title}}</th>
+			<th>Cost</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- ng-click="tools.corp.buyStock(corp, me())"  // would go in tr-->
+		<tr ng-repeat="corp in game.category.corporations | orderBy:'cost'" 
+			title="{{corp.title}}"
+			style="background-color:{{corp.background}}; color:{{corp.font}};">
+			<td>{{corp.stock}}</td>
+			<td>{{corp.symbol}}</td>
+			<td title="{{tools.corp.tiles(corp.i).length}} tiles" >${{tools.corp.value(corp, 'cost')}}</td>
+		</tr>
+	</tbody>
+</table>

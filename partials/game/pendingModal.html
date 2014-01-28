@@ -1,0 +1,17 @@
+<div class="modal fade" id="pendingModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Pending Approval</h4>
+			</div>
+			<div class="modal-body">
+				<p>Your request to join the game has been sent to {{game.players[0].name}}, please wait until you are approved.</p>
+				<p>This box will disappear when you are accepted into the game.</p>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-warning" ng-click="tools.game.viewOnly(tools.player.me())">View Only</a>
+				<a class="btn btn-danger" ng-click="tools.player.leave()">Leave Game</a>
+			</div>
+		</div>
+	</div>
+</div>
