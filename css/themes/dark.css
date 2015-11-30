@@ -1,0 +1,40 @@
+body{
+	background-color: #111;
+}
+nav.navbar{
+	background: #252a30;
+}
+
+.dark {
+	background: #001;
+	color: #FFF;
+}
+.info{
+	color: #CCC;
+	background-color: #131517;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+#board{
+	border-bottom: 1px solid #222;
+	border-left: 1px solid #222;
+}
+#board td{
+	border-top: 1px solid #222;
+	border-right: 1px solid #222;
+	color: #FFF;
+}
+#history-list{
+	color: #FFF;
+}
+.onBoard{
+	background: #777;
+}
+.myTile{
+	box-shadow: inset 0px 0px 10px #09F;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 10px #FF0;
+}

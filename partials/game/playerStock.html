@@ -1,0 +1,21 @@
+<!-- <div class="cards">
+	<div class="card" ng-repeat="stock in game.player.getStock(game.player.me.index)">
+		<h1 class="{{game.corp.list[stock.corp].symbol}}">{{stock.name}}</h1>
+		<span class="badge">{{stock.list.length}}</span>
+		<p>Purchase History</p>
+		<ul>
+			<li ng-repeat="history in stock.list">{{history.price | currency}}</li>
+		</ul>
+	</div>
+</div> -->
+
+<div class="cards" ng-show="tools.player.stock(me()).length">
+	<div class="card" ng-repeat="corp in tools.player.stock(me()) | orderBy:'cost'">
+		<h1 style="background:{{corp.background}}; color:{{corp.font}};" title="{{corp.title}}">{{corp.title}}</h1>
+		<span class="badge">{{me().stock[corp.i].length}}</span>
+		<p>Purchase History</p>
+		<ul>
+			<li ng-repeat="price in me().stock[corp.i]">{{price | currency}}</li>
+		</ul>
+	</div>
+</div>

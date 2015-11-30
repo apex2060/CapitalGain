@@ -1,0 +1,67 @@
+<div class="modal fade" id="setupModal">
+	<div class="modal-dialog">
+		<form class="form-horizontal" role="form" ng-submit="tools.game.save()">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Settings</h4>
+				</div>
+				<div class="modal-body">
+					<!-- (Create new corporations, change starting money, change #tiles [on board, in hand]) -->
+					<div class="form-group">
+						<label for="tilesX" class="col-lg-5 control-label">Corporate Category</label>
+						<div class="col-lg-7">
+							<select class="form-control" ng-model="temp.game.category" ng-options="c as c.title for c in templateCorps.categories"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="stock" class="col-lg-5 control-label"># Corporate Stocks</label>
+						<div class="col-lg-7">
+							<input type="number" class="form-control" id="stock" placeholder="25" ng-model="temp.game.stock">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="tilesX" class="col-lg-5 control-label"># Columns</label>
+						<div class="col-lg-7">
+							<input type="number" class="form-control" id="tilesX" placeholder="12" ng-model="temp.game.tilesX">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="tilesY" class="col-lg-5 control-label"># Rows</label>
+						<div class="col-lg-7">
+							<input type="number" class="form-control" id="tilesY" placeholder="9" ng-model="temp.game.tilesY">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="benchTiles" class="col-lg-5 control-label"># Bench Tiles</label>
+						<div class="col-lg-7">
+							<input type="number" class="form-control" id="benchTiles" placeholder="6" ng-model="temp.game.benchTiles">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="startMoney" class="col-lg-5 control-label">Starting Money</label>
+						<div class="col-lg-7">
+							<div class="input-group">
+								<span class="input-group-addon">$</span>
+								<input type="text" class="form-control" id="startMoney" placeholder="6000" ng-model="temp.game.startMoney">
+								<span class="input-group-addon">.00</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="startMoney" class="col-lg-5 control-label">Allow Stats</label>
+						<div class="col-lg-7">
+							<input type="checkbox"  ng-model="temp.game.allowStats">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<input type="submit" class="btn btn-primary" value="Save &amp; Restart" ng-show="tools.player.isHost(me()) || tools.player.isOwner()">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

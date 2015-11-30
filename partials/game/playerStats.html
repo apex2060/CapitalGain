@@ -1,0 +1,5 @@
+<div id="playerStats" class="info">
+	<h1>{{me().name}}</h1>
+	<span class="money">Savings: {{me().money | currency}}</span>
+	<a class="btn btn-block btn-info" ng-click="tools.player.edit(me())" ng-show="tools.player.isMyTurn(me())">Settings</a>
+</div>

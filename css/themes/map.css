@@ -1,0 +1,61 @@
+body{
+	background: url('//play.capitalgain.us/img/map.jpg');
+}
+nav.navbar {
+    background: none;
+    box-shadow: inset 0px 0px 50px #420;
+}
+
+.dark {
+	background: #342202;
+	color: #DFCBA5;
+}
+.info{
+	background-color: #342202;
+	color: #DFCBA5;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.cards .card {
+	border: 1px solid #12264B;
+	background: #342202;
+	color: #DFCBA5;
+	box-shadow: inset 0px 0px 100px #888;
+}
+
+#board{
+	border-bottom: 1px solid #715012;
+	border-left: 1px solid #715012;
+}
+#board td{
+    border-top: 1px solid #715012;
+    border-right: 1px solid #715012;
+    color: #FFF;
+    background: rgba(60, 30, 0, .5);
+}
+#board td.onBoard{
+	background: #777;
+	color: #FFF;
+}
+
+
+.nav-tabs {
+    background: #750;
+    border-radius: 0px;
+    border: 2px dotted #000;
+}
+.nav-tabs>li>a{
+	border-radius: 0px;
+}
+.nav-tabs *{
+	color: #FFF;
+}
+
+
+.myTile{
+	box-shadow: inset 0px 0px 25px #FFF;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 25px #000;
+}

@@ -1,0 +1,64 @@
+body{
+	background: #a90329; /* Old browsers */
+	background: -moz-linear-gradient(45deg, #a90329 0%, #8f0222 44%, #6d0019 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#a90329), color-stop(44%,#8f0222), color-stop(100%,#6d0019)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(45deg, #a90329 0%,#8f0222 44%,#6d0019 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(45deg, #a90329 0%,#8f0222 44%,#6d0019 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(45deg, #a90329 0%,#8f0222 44%,#6d0019 100%); /* IE10+ */
+	background: linear-gradient(45deg, #a90329 0%,#8f0222 44%,#6d0019 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+nav.navbar{
+	background: #000;
+}
+
+.dark {
+	background: #000;
+	color: #900;
+}
+.info{
+	color: #900;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.cards .card {
+	border: 1px solid #12264B;
+	color: #900;
+}
+.info, .cards .card{
+	background: #fceabb; /* Old browsers */
+	background: -moz-linear-gradient(top, #fceabb 0%, #f8b500 12%, #fccd4d 29%, #fbdf93 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fceabb), color-stop(12%,#f8b500), color-stop(29%,#fccd4d), color-stop(100%,#fbdf93)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fceabb 0%,#f8b500 12%,#fccd4d 29%,#fbdf93 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fceabb 0%,#f8b500 12%,#fccd4d 29%,#fbdf93 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fceabb 0%,#f8b500 12%,#fccd4d 29%,#fbdf93 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #fceabb 0%,#f8b500 12%,#fccd4d 29%,#fbdf93 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fbdf93',GradientType=0 ); /* IE6-9 */
+}
+
+nav.navbar.turn{
+	background: #FFF;
+}nav.navbar.turn a{
+	color: #000;
+}
+#board{
+	background: #CCC;
+	border-bottom: 1px solid #10004E;
+	border-left: 1px solid #10004E;
+}
+#board td{
+	border-top: 1px solid #10004E;
+	border-right: 1px solid #10004E;
+	color: #10004E;
+}
+.onBoard{
+	background: #777;
+	color: #900;
+}
+.myTile{
+	box-shadow: inset 0px 0px 10px #000;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 10px #FF0;
+}

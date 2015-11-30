@@ -1,0 +1,38 @@
+<div class="modal fade" id="placeCorpModal" ng-class="{'minModal': tools.display.minModal()}" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">Place A {{game.category.title}}</h4>
+			</div>
+			<div class="modal-body willMin">
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<!-- <th>Stocks</th> -->
+							<th>Stocks</th>
+							<th>{{game.category.title}}</th>
+							<th>Cost</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="corp in tools.corp.listAvail() | orderBy:'cost'" 
+							ng-click="tools.corp.place(corp, me())" 
+							title="Place: {{corp.title}}"
+							style="background-color:{{corp.background}}; color:{{corp.font}};">
+							<!-- <td>{{corp.stock}}</td> -->
+							<td title="you own - available">{{tools.player.stockCt(me(), corp)}} - {{corp.stock}}</td>
+							<td>{{corp.title}}</td>
+							<td>${{tools.corp.value(corp, 'cost')}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer willMin" style="text-align:left;">
+				<p>Choose a {{game.category.title}} that you would like to place on the board.  
+					<br>You will receive 1 free stock in the {{game.category.title}} you choose.
+					<br><span class="small">(If there are stocks available)</span></p>
+			</div>
+		</div>
+	</div>
+</div>

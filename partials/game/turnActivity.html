@@ -1,0 +1,16 @@
+<div class="cards" ng-show="tools.corp.purchaseList().length">
+	<div class="card purchaseCard">
+		<h1 title="Purchases">Purchases</h1>
+		<span class="badge">{{game.purchases}}</span>
+		<p></p>
+		<ul>
+			<li ng-repeat="trans in tools.corp.purchaseList()"
+				title="{{trans.corp.title}}"
+				style="background-color:{{trans.corp.background}}; color:{{trans.corp.font}};">
+				<span>{{tools.corp.value(trans.corp).cost | currency}}</span>
+				<i class="fa fa-times pull-right" title="undo purchase" ng-click="tools.corp.purchaseUndo(trans)"></i>
+			</li>
+		</ul>
+		<a class="btn btn-block btn-warning" ng-click="tools.player.endTurn(me())">End Turn</a>
+	</div>
+</div>

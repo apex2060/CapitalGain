@@ -1,0 +1,43 @@
+body{
+	background: url('http://upload.wikimedia.org/wikipedia/commons/2/2e/Wood_background.jpg');
+}
+nav.navbar{
+	background: #342202;
+}
+
+.dark {
+	background: #342202;
+	color: #DFCBA5;
+}
+.info{
+	background-color: #342202;
+	color: #DFCBA5;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.cards .card {
+	border: 1px solid #12264B;
+	background: #342202;
+	color: #DFCBA5;
+}
+
+#board{
+	border-bottom: 1px solid #715012;
+	border-left: 1px solid #715012;
+}
+#board td{
+	border-top: 1px solid #715012;
+	border-right: 1px solid #715012;
+	color: #715012;
+}
+#board td.onBoard{
+	background: #777;
+	color: #FFF;
+}
+.myTile{
+	box-shadow: inset 0px 0px 10px #715012;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 10px #FF0;
+}

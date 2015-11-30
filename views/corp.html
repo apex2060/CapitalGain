@@ -1,0 +1,91 @@
+<div ng-include="'partials/nav.html'"></div>
+<div ng-controller="CorpCtrl">
+	<div ng-include="'partials/corp/addModal.html'"></div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<div class="panel panel-info">
+					<table class="table table-striped">
+						<thead>
+							<tr class="success">
+								<th colspan="2">Corporate Category</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="category in corporate.categories" ng-click="tools.category.focus($index)">
+								<td>
+									<span ng-hide="category.inEdit">{{category.title}}</span>
+									<input type="text" class="form-control" id="corpCategory" placeholder="Corporate Category" ng-model="category.title" ng-show="category.inEdit">
+								</td>
+								<td class="center">
+									<a class="btn btn-error" title="Edit" ng-click="tools.category.edit($index)"><i class="fa fa-pencil"></i></a>
+									<a class="btn btn-error" title="Delete" ng-click="tools.category.delete($index)"><i class="fa fa-trash-o"></i></a>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="warning">
+								<form ng-submit="tools.category.add()">
+									<td>
+										<label class="sr-only" for="corpCategory">New Category</label>
+										<input type="text" class="form-control" id="corpCategory" placeholder="New Category" ng-model="temp.category">
+									</td>
+									<td class="center"><input type="submit" class="btn btn-success" value="Add"></input></td>
+								</form>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-8">
+				<div class="panel panel-info" ng-hide="currentCat">
+					<table class="table">
+						<thead>
+							<tr class="success">
+								<th>Corporate Management</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<p>You can add categories on the left.  
+										<br>To add a corporation, click on the category to which it will belong.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-8" ng-show="currentCat">
+				<div class="panel panel-info">
+					<table class="table">
+						<thead>
+							<tr class="success">
+								<th colspan="4">{{currentCat.title}}&nbsp;</th>
+							</tr>
+							<tr>
+								<th>Corporation</th>
+								<th>Symbol</th>
+								<th>Starting Cost</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="hand" ng-repeat="icorp in currentCat.corporations | orderBy:'cost'" style="background-color:{{icorp.background}}; color:{{icorp.font}};">
+								<td>{{icorp.title}}</td>
+								<td>{{icorp.symbol}}</td>
+								<td>{{icorp.cost}}</td>
+								<td class="center">
+									<a class="btn btn-error" title="Edit" ng-click="tools.corp.edit(icorp)"><i class="fa fa-pencil"></i></a>
+									<a class="btn btn-error" title="Delete" ng-click="tools.corp.delete(icorp)"><i class="fa fa-trash-o"></i></a>
+								</td>
+							</tr>
+							<tr><td colspan="4"><button type="button" class="btn btn-success btn-block" ng-click="tools.corp.add()">Add Corporation</button></td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

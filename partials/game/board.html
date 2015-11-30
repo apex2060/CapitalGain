@@ -1,0 +1,14 @@
+<table id="board" class="table">
+	<tbody>
+		<tr ng-repeat="row in game.board">
+			<td class="tile" 
+				ng-repeat="cell in row" 
+				ng-class="{myTile: cell.owner==user.objectId, onBoard:cell.onBoard, lastPlaced:cell.address==game.lastTile.address}" 
+				ng-click="tools.tile.focus(me(), cell)"
+				style="{{tools.tile.style(cell)}}"
+				title="{{tools.corp.get(cell.corp).title}}">
+				{{cell.address}}
+			</td>
+		</tr>
+	</tbody>
+</table>

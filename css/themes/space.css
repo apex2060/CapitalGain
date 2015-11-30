@@ -1,0 +1,50 @@
+body{
+	background: url('//play.capitalgain.us/img/space.jpg');
+}
+nav.navbar{
+	background: #012;
+}
+
+.dark {
+	background: #012;
+	color: #0AF;
+}
+.info{
+	background-color: #012;
+	color: #0AF;
+	border: 1px solid #030303;
+	border-top: solid 1px #2f2f2f;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.cards .card {
+	border: 1px solid #0AF;
+	background: #012;
+	color: #0AF;
+}
+
+#board{
+	border-bottom: 1px solid #09F;
+	border-left: 1px solid #09F;
+}
+#board td {
+    border-top: 1px solid #09f;
+    border-right: 1px solid #09f;
+    color: #FFF;
+    background: #012;
+}
+#board td.onBoard{
+	background: #777;
+	color: #FFF;
+}
+
+.nav-tabs {
+    background: #012;
+    border-radius: 5px;
+}
+
+.myTile{
+	box-shadow: inset 0px 0px 25px #FFF;
+}
+.onBoard.lastPlaced{
+	box-shadow: inset 0px 0px 25px #0AF;
+}

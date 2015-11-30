@@ -1,0 +1,34 @@
+<div class="modal" id="fullStatsModal" ng-class="{'minModal': tools.display.minModal()}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">All Knowing</h4>
+			</div>
+			<div class="modal-body willMin">
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>Corp/Player</th>
+							<th class="hand" ng-repeat="player in game.players" style="{{tools.player.style(player)}}"><b></b>{{player.name}}</b><br>{{player.money | currency}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="corp in game.category.corporations" style="background-color:{{corp.background}}; color:{{corp.font}};">
+							<td ng-click="tools.corp.buyStock(corp,me())" title="Buy at: {{tools.corp.value(corp,'cost') | currency}}">
+								<span>{{corp.title}}</span>
+							</td>
+							<td ng-repeat="player in game.players">
+								<span>{{player.stock[corp.i].length}}</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer willMin" style="text-align:left;">
+				<p><a ng-click="tools.tile.place(me(), tools.ai.tileToChoose(me()))">You should place: {{tools.ai.tileToChoose(me()).address}}</a></p>
+				<p><a href="" ng-click="tools.player.endTurn(me())">End Turn</a></p>
+			</div>
+		</div>
+	</div>
+</div>

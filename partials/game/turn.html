@@ -1,0 +1,20 @@
+<nav class="navbar navbar-inverse turn" role="navigation" ng-hide="game.final">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="" ng-dblclick="tools.ai.allKnowing(0)">Turn: {{tools.player.get(game.turn).name}}</a>
+	</div>
+	<ul class="nav navbar-nav">
+		<li><a href=""><span ng-class="{active:game.step==0}">Place Tile</span></a></li>
+		<li><a href="" ng-click="tools.game.setStep(me(), 1)"><span ng-class="{active:game.step==1}">Purchase {{3-game.purchases}} Stock</span></a></li>
+		<li><a href="" ng-click="tools.player.endTurn(me())"><span ng-class="{active:game.step==2}">End Turn</span></a></li>
+		<li><a>{{temp.timer}}</a></li>
+	</ul>
+</nav>
+<nav class="navbar navbar-inverse turn" role="navigation" ng-show="game.final">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="">End Of Game!</a>
+	</div>
+	<ul class="nav navbar-nav">
+		<li><a href="" ng-click="tools.game.endModal()"><span>Show Stats</span></a></li>
+		<li><a href="" ng-click="tools.game.setupModal()"><span>Restart Game</span></a></li>
+	</ul>
+</nav>

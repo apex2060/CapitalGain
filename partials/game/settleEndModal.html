@@ -1,0 +1,32 @@
+<div class="modal" id="settleEndModal" ng-class="{'minModal': tools.display.minModal()}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">End Of Game Settlement</h4>
+			</div>
+			<div class="modal-body willMin">
+				<table class="table">
+					<thead>
+						<tr class="dark">
+							<th>Players</th>
+							<th>Money</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="player in game.players" 
+							title="{{player.name}}"
+							style="{{tools.player.style(player)}}">
+							<td>{{player.name}}</td>
+							<td>{{player.money | currency}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div ng-bind-html-unsafe="game.final.message"></div>
+			</div>
+			<div class="modal-footer" style="text-align:left;">
+				<p>Thanks For Playing!</p>
+			</div>
+		</div>
+	</div>
+</div>

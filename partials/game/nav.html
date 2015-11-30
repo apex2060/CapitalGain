@@ -1,0 +1,45 @@
+<nav class="navbar navbar-inverse" role="navigation">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="#">Capital Gain</a>
+	</div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="nav navbar-nav">
+			<li><a href="" ng-click="tools.game.setupModal()" ng-show="tools.player.isHost(me()) || tools.player.isOwner()">Restart Game</a></li>
+			<li><a href="" ng-click="tools.game.setupModal()" ng-hide="tools.player.isHost(me()) || tools.player.isOwner()">Game Details</a></li>
+			<li><a href="" ng-click="tools.ai.allKnowing(3)"  ng-show="game.settings.allowStats">Game Stats</a></li>
+			<!-- <li><a href="" ng-click="tools.game.settingsModal()">Settings</a></li> -->
+			<li><a href="" ng-click="instructions()">Instructions</a></li>
+			<!-- <li><a href="">Players</a></li> -->
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Theme <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a ng-click="theme('dark')">Midnight</a></li>
+					<li><a ng-click="theme('wood')">Wood</a></li>
+					<li><a ng-click="theme('forest')">Forest</a></li>
+					<li><a ng-click="theme('ocean')">Ocean</a></li>
+					<li><a ng-click="theme('space')">Space</a></li>
+					<li><a ng-click="theme('map')">Old West</a></li>
+				</ul>
+			</li>
+			<!-- <li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Views <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="#">Default</a></li>
+					<li><a href="#">Mobile</a></li>
+					<li><a href="#" title="Use this on a tablet so everyone can see 'the board'">Board Only</a></li>
+				</ul>
+			</li> -->
+		</ul>
+	</div><!-- /.navbar-collapse -->
+</nav>
