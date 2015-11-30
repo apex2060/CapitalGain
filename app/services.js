@@ -16,6 +16,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 	*/
 	// console.log('fireParse')
 
+
 	if(navigator.onLine)
 		Parse.initialize(config.parseAppId, config.parseJsKey);
 	$http.defaults.headers.common['X-Parse-Application-Id'] = config.parseAppId;
@@ -145,6 +146,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 	it.fireParse = fireParse;
 	return fireParse;
 });
+
 
 
 app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
@@ -1876,6 +1878,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 	it.gameTools = tools;
 	return tools;
 });
+
 
 
 app.factory('ai', function ($rootScope) {
