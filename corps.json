@@ -95,5 +95,50 @@
       "symbol" : "SPCX",
       "background" : "#400040"
     } ]
-  } ]
+  }, {
+    "title" : "Candy",
+    "corporations" : [ {
+      "cost" : 1,
+      "font" : "#F4F4F4",
+      "title" : "KitKat",
+      "symbol" : "KiKa",
+      "background" : "#FB141E"
+    }, {
+      "cost" : 1,
+      "font" : "#CBD2D8",
+      "title" : "Hersheys",
+      "symbol" : "HRYS",
+      "background" : "#582134"
+    }, {
+      "cost" : 2,
+      "font" : "#FF0728",
+      "title" : "Twix",
+      "symbol" : "TWIX",
+      "background" : "#DA9A5D"
+    }, {
+      "cost" : 2,
+      "font" : "#A92A26",
+      "title" : "Milky Way",
+      "symbol" : "MKWY",
+      "background" : "#42BA64"
+    }, {
+      "cost" : 2,
+      "font" : "#603236",
+      "title" : "M and M",
+      "symbol" : "MMMM",
+      "background" : "#F0D738"
+    }, {
+      "cost" : 3,
+      "font" : "#280E0F",
+      "title" : "Snickers",
+      "symbol" : "SNCK",
+      "background" : "#070980"
+    }, {
+      "cost" : 3,
+      "font" : "#FCDB00",
+      "title" : "Reeses",
+      "symbol" : "REESES",
+      "background" : "#FF4D13"
+    } ]
+  }]
 }
