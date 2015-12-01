@@ -140,105 +140,10 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		fbRef.pending		= new Firebase("https://"+config.fbdb+".firebaseio.com/game/"+gameId+'/pending');
 		fbRef.userGame 		= new Firebase("https://"+config.fbdb+".firebaseio.com/presence/"+$rootScope.user.objectId+'/game');
 		fbRef.userGame.set(gameId);
-		$rootScope.templateCorps = {
-			"categories": [{
-				"title": "University",
-				"corporations": [{
-					"cost": 2,
-					"font": "#ffffff",
-					"title": "Brigham Young University",
-					"symbol": "BYU",
-					"background": "#1002bd"
-				}, {
-					"cost": 3,
-					"font": "#808080",
-					"title": "Princeton",
-					"symbol": "P",
-					"background": "#ffb56a"
-				}, {
-					"cost": 3,
-					"font": "#ffffff",
-					"title": "Harvard",
-					"symbol": "H",
-					"background": "#800000"
-				}, {
-					"cost": 1,
-					"font": "#ffff00",
-					"title": "Western New Mexico University",
-					"symbol": "WNMU",
-					"background": "#871b9e"
-				}, {
-					"cost": 1,
-					"font": "#ffffff",
-					"title": "Eastern Arizona College",
-					"symbol": "EAC",
-					"background": "#d755d3"
-				}, {
-					"cost": 2,
-					"font": "#d3d3d3",
-					"title": "Brigham young University Idaho",
-					"symbol": "BYUI",
-					"background": "#4494e3"
-				}, {
-					"cost": 2,
-					"font": "#0000a0",
-					"title": "W nivsertiy",
-					"symbol": "WTY",
-					"background": "#eefcfd"
-				}]
-			}, {
-				"title": "Tech Company",
-				"corporations": [{
-					"cost": 2,
-					"font": "#ffffff",
-					"title": "Facebook",
-					"symbol": "FB",
-					"background": "#000093"
-				}, {
-					"cost": 3,
-					"font": "#ffff00",
-					"title": "Google",
-					"symbol": "GOOG",
-					"background": "#0000ff"
-				}, {
-					"cost": 2,
-					"font": "#93d3f7",
-					"title": "Intel",
-					"symbol": "INTEL",
-					"background": "#ffffff"
-				}, {
-					"cost": 2,
-					"font": "#484848",
-					"title": "Amazon",
-					"symbol": "AMZN",
-					"background": "#ffbf80"
-				}, {
-					"cost": 1,
-					"font": "#ffffff",
-					"title": "Twitter",
-					"symbol": "TWT",
-					"background": "#59a0ee"
-				}, {
-					"cost": 1,
-					"font": "#294efa",
-					"title": "Napster",
-					"symbol": "NSTR",
-					"background": "#18b43c"
-				}, {
-					"cost": 3,
-					"font": "#dddddd",
-					"title": "Tesla",
-					"symbol": "TSLA",
-					"background": "#b31313"
-				}, {
-					"cost": 4,
-					"font": "#a8e8fb",
-					"title": "Space X",
-					"symbol": "SPCX",
-					"background": "#400040"
-				}]
-			}]
-		}
+		$http.get('/corps.json').success(function(c){
+			$rootScope.templateCorps = c;
+		})
+
 
 		if(Firebase==false){
 			location.reload();
