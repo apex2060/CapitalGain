@@ -77,14 +77,14 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 			signupParse:function(user){
 				user.username = user.email;
 				if(user.password!=user.password1){
-					notify('error','Your passwords do not match.');
+					$rootScope.notify('error','Your passwords do not match.');
 				}else{
 					delete user.password1;
 					$http.post('https://api.parse.com/1/users', user).success(function(data){
 						fireParse.user.signupFire(user);
 					}).error(function(error, data){
 						// console.log('signupParse error: ',error,data);
-						notify('error',error.error);
+						$rootScope.notify('error',error.error);
 					});
 				}
 			},
@@ -136,7 +136,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 					// console.log('updateUser',data)
 				}).error(function(error, data){
 					// console.log('settingsSave error: ',error,data);
-					notify('error',error.error);
+					$rootScope.notify('error',error.error);
 				});
 			}
 		}
@@ -170,7 +170,6 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 			this.lastPlayed = tools.audio[audio].mp3;
 			this.lastPlayed.play();
 		},
-		
 		clearHistory:function(playerIndex){
 			var remove = true;
 			while(remove){
@@ -237,9 +236,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 			init:function(){
 				if($routeParams.gameId==$rootScope.user.objectId){
 					if($rootScope.game && $rootScope.game.players && $rootScope.game.board){
-						notify('This is your game -- already in progress');
+						$rootScope.notify('This is your game -- already in progress');
 					}else{
-						notify('New')
+						$rootScope.notify('New')
 						tools.game.create();
 					}
 				}else{
@@ -277,7 +276,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				ga('send', 'event', 'game', 'new game', 50);
 			},
 			join:function(){
-				notify('Joining Game')
+				$rootScope.notify('Joining Game')
 				var g = $rootScope.game;
 				var playerFound = false;
 				var pendingFound = false;
@@ -306,9 +305,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 						$rootScope.game.pending.push($rootScope.user);
 						$rootScope.$broadcast('saveGame');
 					}
-					notify('Welcome to the game!');
+					$rootScope.notify('Welcome to the game!');
 				}else{
-					notify('Welcome back to the game!');
+					$rootScope.notify('Welcome back to the game!');
 				}
 			},
 			viewOnly:function(){
@@ -345,6 +344,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				return player;
 			},
 			save:function(){
+				$rootScope.$broadcast('newGame');
 				$('#setupModal').modal('hide');
 				// console.log('save',$rootScope.temp.game.category)
 				$rootScope.game.category = angular.copy($rootScope.temp.game.category);
@@ -417,7 +417,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 							if(callback)
 								callback('error', '1. You must place a tile first.')
 							else
-								notify('error', 'You must place a tile first.')
+								$rootScope.notify('error', 'You must place a tile first.')
 						}
 					}else if(step==2){
 						if($rootScope.game.step==1 || !tools.ai.canPlaceTile(player)){
@@ -426,7 +426,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 							if(callback)
 								callback('error', '2. You must place a tile first.')
 							else
-								notify('error', 'You must place a tile first.')
+								$rootScope.notify('error', 'You must place a tile first.')
 						}
 					}
 				}
@@ -573,22 +573,26 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 						if(tile.corp!=undefined)
 							tools.corp.buyStock(tools.corp.get(tile.corp), player)
 						else
-							notify('error','You must click on a tile that already has a '+$rootScope.game.category.title+' on it.')
+							$rootScope.notify('error','You must click on a tile that already has a '+$rootScope.game.category.title+' on it.')
 					else
-						notify('There is nothing left to do... maybe you get to see corp info')
+						$rootScope.notify('There is nothing left to do... maybe you get to see corp info')
 				}else{
 					if(tile.corp!=undefined){
+						var corp = tools.corp.get(tile.corp);
 						var messages = [
 							'That is a neat '+$rootScope.game.category.title+' do you wish it were your turn so you could buy some?',
-							'I like '+tools.corp.get(tile.corp).title+' as well!  Maybe we should buy some.'
+							'I like '+corp.title+' as well!  Maybe we should buy some.'
 						]
-						notify('error',messages[lib.randomInt(0,messages.length-1)])
+						if(tools.corp.value(corp, 'cost') > tools.player.me().money)
+							$rootScope.notify('error', 'That is great, you have some high aspirations, now you just need to save up to buy some stock in '+corp.title);
+						else
+							$rootScope.notify('error',messages[lib.randomInt(0,messages.length-1)])
 					}else if(tile.onBoard){
-						notify('error','Do you remember who placed that tile?')
+						$rootScope.notify('error','Do you remember who placed that tile?')
 					}else if(tile.owner==player.objectId){
-						notify('error','Wait!  It is not your turn yet...')
+						$rootScope.notify('error','Wait!  It is not your turn yet...')
 					}else{
-						notify('error','Dont you wish you had that tile!')
+						$rootScope.notify('error','Dont you wish you had that tile!')
 					}
 				}
 			},
@@ -635,7 +639,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 										if(callback){//For AI
 											callback('error', 'noNewCorp');
 										}else//For Human
-											notify('error','You can not place that tile at this time because all corporations are on the board.')
+											$rootScope.notify('error','You can not place that tile at this time because all corporations are on the board.')
 									}
 								}else{//Loner Tile
 									tile.onBoard=true;
@@ -907,37 +911,37 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 										if(callback)
 											callback('error','You do not have engough money to buy this stock.')
 										else
-											notify('error','You do not have engough money to buy this stock.')
+											$rootScope.notify('error','You do not have engough money to buy this stock.')
 									}
 								}else{
 									if(callback)
 										callback('error','There are no stocks available for this company.')
 									else
-										notify('error','There are no stocks available for this company.')
+										$rootScope.notify('error','There are no stocks available for this company.')
 								}
 							}else{
 								if(callback)
 									callback('error',corp.title+' is not on the board.')
 								else
-									notify('error',corp.title+' is not on the board.')
+									$rootScope.notify('error',corp.title+' is not on the board.')
 							}
 						}else{
 							if(callback)
 								callback('error','Corp or player was undefined.')
 							else
-								notify('error','Corp or player was undefined.')
+								$rootScope.notify('error','Corp or player was undefined.')
 						}
 					}else{
 						if(callback)
 							callback('error','You can only purchase 3 stocks.')
 						else
-							notify('error','You can only purchase 3 stocks.')
+							$rootScope.notify('error','You can only purchase 3 stocks.')
 					}
 				}else{
 					if(callback)
 						callback('error','You can not purchase at this time. ')
 					else
-						notify('error','You can not purchase at this time.')
+						$rootScope.notify('error','You can not purchase at this time.')
 				}
 				// console.log(+tools.game.step()+' '+tools.player.isMyTurn(player));
 			},
@@ -953,7 +957,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				transaction.player.money+=cost;
 				$rootScope.game.purchases--;
 				tools.game.setStep(transaction.player, 1)
-				notify('Purchase of: '+transaction.corp.title+' has been reverted.')
+				$rootScope.notify('Purchase of: '+transaction.corp.title+' has been reverted.')
 				ga('send', 'event', 'game', 'undo', 'purchase');
 			},
 			purchaseClear:function(){
@@ -1030,7 +1034,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					if(callback)
 						callback('error', 'You must choose the largest company to be the acquisitor.')
 					else
-						notify('error','You must choose the largest company to be the acquisitor.')
+						$rootScope.notify('error','You must choose the largest company to be the acquisitor.')
 				}
 			},
 			divyBonus:function(corp){
@@ -1111,13 +1115,13 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 						if(callback)
 							callback('error','You do not own enough stock to trade')
 						else
-							notify('error','You do not own enough stock to trade')
+							$rootScope.notify('error','You do not own enough stock to trade')
 					}
 				}else{
 					if(callback)
 						callback('error',staying.title+' does not have any available stocks')
 					else
-						notify('error',staying.title+' does not have any available stocks')
+						$rootScope.notify('error',staying.title+' does not have any available stocks')
 				}
 			},
 			sell: function(player, callback){
@@ -1156,7 +1160,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					tools.tile.setCorp($rootScope.game.merger.keep)
 					$rootScope.game.merger=null;
 					$rootScope.game.mergers=null;
-					notify('This merger is a done deal!');
+					$rootScope.notify('This merger is a done deal!');
 				}
 				$rootScope.$broadcast('saveGame');
 			},
@@ -1306,7 +1310,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					return false;
 			},
 			isOwner:function(){
-				return $rootScope.user.objectId==$routeParams.gameId;
+				if($rootScope.user)
+					return $rootScope.user.objectId==$routeParams.gameId;
 			},
 			tiles:function(player){
 				if(typeof(player)!='object')
@@ -1368,7 +1373,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(tools.player.tiles(player).length==0 || !tools.ai.canPlaceTile(player)){
 					tools.game.nextTurn(player);
 				}else{
-					notify('error','You can not end your turn until after you place a tile.');
+					$rootScope.notify('error','You can not end your turn until after you place a tile.');
 				}
 			},
 			audio:function(player){
@@ -1391,7 +1396,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				tools.display.modalOff();
 				if(player.audio!=0){
 					tools.playAudio(player.audio);
-					notify('Its your turn!')
+					$rootScope.notify('Its your turn!');
+					if(document.webkitHidden)
+						alert('Hey, where did you go?  It is your turn!')
 				}
 			},
 			style:function(player){
@@ -1651,7 +1658,12 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					player = tools.player.get(player);
 				if($rootScope.game.purchases<3){
 					var analysis = tools.ai.rankPurchases(player);
-					var highestRank = analysis.rankings.max();
+					var highestRank = 0
+					if(tools.corp.listOnBoard().length >= ($rootScope.game.category.corporations.length/$rootScope.game.players.length * player.i))
+						highestRank = analysis.rankings.max();
+					for(var i=0; i<analysis.rankings.length;  i++)
+						if(analysis.rankings[i] > 40)
+							highestRank = analysis.rankings.max();
 					// console.debug('Player: '+player.i+' vs round: '+$rootScope.game.round);
 					// if($rootScope.game.round>=player.i){
 						if(highestRank>0){
@@ -1743,7 +1755,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 
 
 					if(!stat.isOnBoard)
-						stat.value=-200;
+						stat.value=-500;
 					else if(stat.possible==0)
 						stat.value=-100;
 					else if(stat.value<25 && stat.majMin.minority==0)

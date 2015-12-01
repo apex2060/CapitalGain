@@ -1,0 +1,14 @@
+<div>
+	<ul class="list-group" style="height: 300px; overflow: auto;">
+		<li class="list-group-item" ng-repeat="msg in game.chat">
+			<span>{{msg.message}}</span>
+			<span class="label label-info pull-right">{{msg.user}}</span>
+		</li>
+	</ul>
+	<form ng-submit="tools.chat.send(temp.message)">
+		<div>
+			<input type="text" class="form-control" ng-model="temp.message">
+			<input type="submit" class="btn btn-block btn-success" value="Send"/>
+		</div>
+	</form>
+</div>
