@@ -1,7 +1,7 @@
 app.factory('config', function () {
 	return {
-		fbdb: 				'capitaltechparse',
-		fireRoot: 			'https://capitaltechparse.firebaseio.com/',
+		fbdb: 				'capitalgain',
+		fireRoot: 			'https://capitalgain.firebaseio.com/',
 		parseAppId: 		'PX69qDYYcXUBA8UqeUwXx7H3UNRujda9jxhjPI7K',
 		parseJsKey: 		'oLvZK8eda5ihEq55BsfPVkGkaq4Djuq27BSAjogP',
 		parseRestApiKey: 	'28HuQH9RHKcV4zkRYas1qpEWUgQ6r1aSWLDJRJlT'
@@ -1703,20 +1703,25 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					for(var a=0; a<corpsAvail.length; a++){
 						var corpAvail = corpsAvail[a]
 						if(corpAvail.i==c){
-							if(stat.majMin.majSH.indexOf(player.i))
+							if(stat.majMin.majSH.indexOf(player.i) != -1)
 								if(stat.majMin.majSH.length==1)
 									rank = 200;
 								else
 									rank = 100;
 							else if(corpAvail.stock==25)
-								rank = 50;
-							else if(stat.majMin.minSH.indexOf(player.i))
+								rank = 75;
+							else if(stat.majMin.minSH.indexOf(player.i) != -1)
 								if(stat.majMin.minSH.length==1)
 									rank = 50;
 								else
 									rank = 25;
 							else
 								rank = 10;
+								
+							if(stat.majMin.majority - stat.myStockCt < stat.possible + 1)
+								rank += 10;
+							else
+								rank -= 10;
 						}
 					}
 					rankings.push(rank)
