@@ -69,10 +69,10 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 });
 
 
-var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routeParams, $timeout, $http, config, gameTools){
+var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routeParams, $timeout, $http, $q, config, gameTools){
 	var gameId = $rootScope.gameId = $routeParams.gameId;
 	var fbRef = {}
-		
+	// var g = $q.defer();
 	$rootScope.me 		= gameTools.player.me;
 	$rootScope.moment 	= moment;
 	$rootScope.notify 	= function(status, message, showTime){
@@ -95,7 +95,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		},
 		chat: {
 			init: function(){
-				fbRef.chat.set('')
+				fbRef.chat.set([])
 			},
 			send: function(message){
 				if(message){
@@ -155,6 +155,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			$rootScope.$apply(function(){
 				// console.log('initial load')
 				$rootScope.game = snap.val();
+				// g.resolve(snap.val())
 				gameTools.game.init();
 			})
 		});
@@ -280,7 +281,6 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			gameTools.game.init();
 		}
 	}
-
 	function setupListeners(){
 		// Update views when certain actions occure
 		// ======================================GAME PLAYER CHANGES=============================================

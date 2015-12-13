@@ -10,7 +10,7 @@ var app = angular.module('CapitalTech', ['firebase'])
 		templateUrl: 'views/game.html',
 	})
 	.when('/game/:gameId/:view', {
-		templateUrl: 'views/game.html',
+		templateUrl: 'views/all.html',
 	})
 	.otherwise({
 		redirectTo: '/home'
