@@ -214,6 +214,8 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		});
 		fbRef.chat.on("child_added", function(snap) {
 			var lm = snap.val();
+			if(lm.message=="come back")
+				alert('Calling all players!')
 			$rootScope.notify('success', lm.message,  1);
 		});
 
@@ -306,7 +308,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		var trigger = false;
 		$rootScope.$watch('game.merger', function (merger){
 			if(gameTools.player.me()){
-				if(merger!=null){
+				if(merger){
 					trigger = true;
 					$scope.tools.merge.mergeTradeSellModal();
 				}else{
@@ -319,9 +321,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 
 						var currentPlayer = gameTools.player.get($rootScope.game.turn);
 						if(currentPlayer.isComputer){
-							console.log('trading is done... time to buy stock.')
 							$timeout(function(){
-								console.log('>>>>>>>>>>>END Merger>>>>>>>>>>>>>>>>>>');
 								// console.log('Game: ',JSON.stringify($rootScope.game))
 								gameTools.ai.chooseBuyStock($rootScope.game.turn);
 							}, 500);
@@ -341,7 +341,6 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 				if(gameTools.player.isHost(gameTools.player.me())){//If I am the host
 					if(turn!=undefined && turn !=null){
 						if(gameTools.player.get(turn).isComputer){
-							console.log('Autos turn to trade or sell.')
 							$timeout(function(){
 								gameTools.ai.chooseTradeSell(gameTools.player.get(turn));
 							}, 500);
@@ -367,7 +366,6 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 				}
 				if(gameTools.player.isHost(gameTools.player.me())){//If I am the host
 					if(gameTools.player.get(turn).isComputer){
-						console.log('>>>>>>>>>>>>>>>>>>>>..Begin auto turn.')
 						$timeout(function(){
 							gameTools.ai.turn(gameTools.player.get(turn));
 						}, 500);
