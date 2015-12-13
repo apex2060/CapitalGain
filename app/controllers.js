@@ -372,7 +372,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 					}
 				}
 			}else{
-				console.log('something was not defined')
+				console.log('SWND')
 			}
 		});
 		$rootScope.$watch('game.final', function (end){
