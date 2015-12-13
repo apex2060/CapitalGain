@@ -72,7 +72,7 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routeParams, $timeout, $http, $q, config, gameTools){
 	var gameId = $rootScope.gameId = $routeParams.gameId;
 	var fbRef = {}
-	// var g = $q.defer();
+	var g = $q.defer();
 	$rootScope.me 		= gameTools.player.me;
 	$rootScope.moment 	= moment;
 	$rootScope.notify 	= function(status, message, showTime){
@@ -155,7 +155,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			$rootScope.$apply(function(){
 				// console.log('initial load')
 				$rootScope.game = snap.val();
-				// g.resolve(snap.val())
+				g.resolve(snap.val())
 				gameTools.game.init();
 			})
 		});
@@ -188,7 +188,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		fbRef.board.on('value', function(snap) {
 			// console.log('Board updated from firebase.')
 			if($rootScope.game){
-				game.once('value', function(snap) { 
+				fbRef.game.once('value', function(snap) { 
 					if(!$rootScope.$$phase){
 						$rootScope.$apply(function(){
 							$rootScope.game = snap.val();
