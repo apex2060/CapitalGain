@@ -107,13 +107,15 @@ body{
 	margin-left: -8px;
 }
 
-
 #remoteVideos video {
 	height: 150px;
+	border-radius: 10px;
+	border: 3px dashed #FFF;
 }
 #localVideo {
 	height: 150px;
 	border-radius: 10px;
+	border: 3px dashed #FFF;
 }
 
 

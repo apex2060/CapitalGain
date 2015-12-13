@@ -201,8 +201,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					}
 				}
 			}else{
-				if(!$rootScope.game.history)
-					$rootScope.game.history = [];
+				if(!$rootScope.temp.history)
+					$rootScope.temp.history = [{messages: 'Nothing...', player: player.i}]
 				if(type=='end'){
 					$rootScope.game.history.push($rootScope.temp.history)
 					$rootScope.temp.history = null;
@@ -1088,7 +1088,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					return tools.corp.get($rootScope.game.merger.leaving[0]);
 			},
 			mergeTradeSellModal:function(){
-				if($rootScope.game.merger!=null)
+				if($rootScope.game.merger)
 					$('#mergeTradeSellModal').modal({
 						keyboard: false,
 						backdrop: 'static',
@@ -1158,8 +1158,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					$rootScope.game.merger.message = message;
 				}else{
 					tools.tile.setCorp($rootScope.game.merger.keep)
-					$rootScope.game.merger=null;
-					$rootScope.game.mergers=null;
+					$rootScope.game.merger=false;
+					$rootScope.game.mergers=false;
 					$rootScope.notify('This merger is a done deal!');
 				}
 				$rootScope.$broadcast('saveGame');
@@ -1404,10 +1404,12 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 			style:function(player){
 				if(typeof(player)!='object')
 					player = this.get(player);
-				if(lib.color.isDark(player.color))
-					return 'background:'+player.color+'; color:#FFF;';
-				else
-					return 'background:'+player.color+'; color:#000;';
+				if(player){
+					if(lib.color.isDark(player.color))
+						return 'background:'+player.color+'; color:#FFF;';
+					else
+						return 'background:'+player.color+'; color:#000;';
+				}
 			}
 		},
 
@@ -1462,7 +1464,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					player = tools.player.get(player);
 				var ranks = [];
 				var tiles = tools.player.tiles(player);
-				var corpsAvail = tools.corp.listAvail()
+				var corpsAvail = tools.corp.listAvail();
+				
 				for(var i=0; i<tiles.length; i++){
 					var tile = tiles[i];
 					var rank = 0;
@@ -1485,43 +1488,45 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 
 					if(nStats.corporations.length>1){	//If tile merges corps
 						var lesserMerger = tools.merge.lesserMerger(nStats.corporations);
-						console.log('Tile Merges Corps![player,corps,hasMaj,money]',player,nStats.corporations,tools.player.hasMaj(player, lesserMerger[c]),player.money)
+						// console.log('Tile Merges Corps![player,corps,hasMaj,money]',player,nStats.corporations,tools.player.hasMaj(player, lesserMerger[c]),player.money)
 						for(var c=0; c<lesserMerger.length; c++){
 							if(tools.player.hasMaj(player, lesserMerger[c])){
-								if(player.money<6000){
-									rank += 75
-								}else{
-									rank -= 25
-								}
+								var majMin = tools.corp.majMin(lesserMerger[c]);
+								if(majMin.majSH.length == 1)
+									rank = 100;
+								else
+									if(player.money<6000){
+										rank = 90
+									}else{
+										rank = -50
+									}
 							}else{
-								rank = -150
+								rank = -100
 							}
 						}
 					}else if(nStats.corporations.length==1){	//If tile extends a corp
 						if(tools.player.hasMaj(player, nStats.corporations[0]))
-							rank += 22
+							rank = 20
 						else
-							rank -= 22
+							rank = -20
 					}else{
 						if(nStats.oponentPlaced.length>0){	//If oponent placed tile next to one that I have
-							rank += 25;
+							rank = 50;
 						}else if(nStats.onBoard.length>0){	//If tile creates a new corp
 							//// if Would have maj in corp placed.
-							// for(var i=0; i<corpsAvail.length; i++){
-							// 	var corp = corpsAvail[i];
-							// 	if(tools.player.hasMaj(player, corp)){
-
-							// 	}
-							// }
-							rank += 24;
+							var availRanks = tools.ai.rankPlaceCorp(player)
+							if(availRanks.max() > 0)
+								rank = 30;
+							else
+								rank = -30
 						}else if(nStats.onBench.length>0){	//If creates a possibility
-							rank += 23;
+							rank = 20;
 						}else if(neighbors.length==2){		//If tile is in corner
-							rank += 3
+							rank = 3
 						}else if(neighbors.length==3){		//If tile is on side
-							rank += 2
+							rank = 2
 						}else{								//If tile is a loner
-							rank += 1;
+							rank = 1;
 						}
 					}
 
