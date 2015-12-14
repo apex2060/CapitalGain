@@ -204,6 +204,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(!$rootScope.temp.history)
 					$rootScope.temp.history = [{messages: 'Nothing...', player: player.i}]
 				if(type=='end'){
+					if(!$rootScope.game.history)
+						$rootScope.game.history = [];
 					$rootScope.game.history.push($rootScope.temp.history)
 					$rootScope.temp.history = null;
 				}else{
