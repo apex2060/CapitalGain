@@ -14,7 +14,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 	 *	userSignupModal
 	 *	userSettingsModal
 	*/
-	// console.log('fireParse')
+	debug('fireParse')
 
 
 	if(navigator.onLine)
@@ -30,16 +30,16 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 				if(navigator.onLine){
 					fireParse.user.auth = new FirebaseSimpleLogin(fireParse.fireRoot, function(error, data) {
 						if (error) {
-							console.log(error);
+							debug(error);
 						} else if (data) {
-							// console.log('FireAuth has been authenticated!')
+							debug('FireAuth has been authenticated!')
 							if(localStorage.user){
 								var localUser = angular.fromJson(localStorage.user);
 								$http.defaults.headers.common['X-Parse-Session-Token'] = localUser.sessionToken;
 							}
 							fireParse.user.initParse(data);
 						} else {
-							// console.log('not logged in.');
+							debug('not logged in.');
 							$rootScope.$broadcast('authError');
 						}
 					});
@@ -55,17 +55,17 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 			initParse:function(){
 				$http.get('https://api.parse.com/1/users/me').success(function(data){
 					$rootScope.user = data;
-					// console.log('user data assigned.');
+					debug('user data assigned.');
 					$rootScope.$broadcast('authComplete');
 					$('#userSignupModal').modal('hide');
 					$('#userLoginModal').modal('hide');
 				}).error(function(){
-					// console.log('User Not Authenticated Any More')
+					debug('User Not Authenticated Any More')
 					$rootScope.$broadcast('authError');
 					//User not authenticated any more...
 					//???Clear user data???
 				});
-				// console.log('initParse complete');
+				debug('initParse complete');
 			},
 			signupModal:function(){
 				$('#userLoginModal').modal('hide');
@@ -83,7 +83,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 					$http.post('https://api.parse.com/1/users', user).success(function(data){
 						fireParse.user.signupFire(user);
 					}).error(function(error, data){
-						// console.log('signupParse error: ',error,data);
+						debug('signupParse error: ',error,data);
 						$rootScope.notify('error',error.error);
 					});
 				}
@@ -91,7 +91,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 			signupFire:function(user){
 				fireParse.user.auth.createUser(user.email, user.password, function(error, data) {
 					if(error)
-						console.log('signupFire error: ',error,data)
+						debug('signupFire error: ',error,data)
 					else
 						fireParse.user.login(user);
 				});
@@ -131,11 +131,11 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 				delete user.updatedAt
 				delete user.sessionToken
 				delete user.username
-				// console.log('settingsSave',user);
+				debug('settingsSave',user);
 				$http.put('https://api.parse.com/1/users/'+user.objectId, user).success(function(data){
-					// console.log('updateUser',data)
+					debug('updateUser',data)
 				}).error(function(error, data){
-					// console.log('settingsSave error: ',error,data);
+					debug('settingsSave error: ',error,data);
 					$rootScope.notify('error',error.error);
 				});
 			}
@@ -149,7 +149,7 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 
 
 
-app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
+app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 	var data = {};
 	var tools = {
 		audio: [
@@ -218,7 +218,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 		rtc:{
 			join:function(room){
 				if(room){
-					// console.log('Joining Room: '+room)
+					debug('Joining Room: '+room)
 					tools.rtc.connection = new SimpleWebRTC({
 						localVideoEl: 'localVideo',
 						remoteVideosEl: 'remoteVideos',
@@ -229,6 +229,112 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					});
 				}
 			}
+		},
+		// train: {
+		// 	init: function(){
+		// 		$('#playerSettingsModal').modal('hide');
+		// 		$('#trainingModal').modal('show');
+		// 		var tiles = tools.tile.list();
+		// 			tiles = angular.copy(tiles);
+		// 		$rootScope.training = tiles.map(function(tile){
+		// 			return {
+		// 				action: 'place',
+		// 				value: tile.address,
+		// 				options: []
+		// 			}
+		// 		})
+		// 		tools.train.start($rootScope.training[0])
+		// 	},
+		// 	start: function(item){
+		// 		$rootScope.train = item;
+		// 		tools.train.listen();
+		// 	},
+		// 	remove: function(option){
+		// 		var i = $rootScope.train.options.indexOf(option);
+		// 		$rootScope.train.options.splice(i, 1);
+		// 	},
+		// 	next: function(){
+		// 		var item = $rootScope.train
+		// 		if(item.options.length > 3){
+		// 			var index = $rootScope.training.indexOf(item);
+		// 			var next = $rootScope.training[index+1];
+		// 			if(next)
+		// 				tools.train.start(next)
+		// 			else
+		// 				alert('Done Training!')
+		// 		}
+		// 	},
+		// 	listen: function(){
+		// 		var recognition = new webkitSpeechRecognition();
+		// 		recognition.continuous = true;
+		// 		recognition.interimResults = true;
+		// 		recognition.onresult = function(event) {
+		// 			var results = event.results;
+		// 			for(var i=event.resultIndex; i<event.results.length; i++){
+		// 				var options = event.results[i];
+		// 				if(options.isFinal){
+		// 					for(var ii=0; ii<options.length; options++){
+		// 						var cmd = options[ii].transcript;
+		// 							cmd = cmd.replace(/\W/g, '')
+		// 							cmd = cmd.toUpperCase()
+		// 							$rootScope.train.options.push(cmd)
+		// 							$rootScope.$apply();
+		// 							tools.train.next();
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 		recognition.start();
+		// 	}
+		// },
+		speech: function(){
+			it.e = []
+			var recognition = new webkitSpeechRecognition();
+			recognition.continuous = true;
+			recognition.interimResults = true;
+			recognition.onresult = function(event) {
+				var me = tools.player.me();
+				var results = event.results;
+				for(var i=event.resultIndex; i<event.results.length; i++){
+					var options = event.results[i];
+					if(options.isFinal){
+						for(var ii=0; ii<options.length; options++){
+							var cmd = options[ii].transcript;
+								console.log(cmd);
+								cmd = cmd.trim();
+								cmd = cmd.toUpperCase()
+							var alt = cmd.replace(/\W/g, '')
+								console.log(cmd, alt);
+							if(alt == 'INTERN' || cmd == 'END TURN'){
+								tools.player.endTurn(me);
+							}else if(cmd == 'SHOW ME THE MONEY' && $rootScope.game.allowStats){
+								var players = $rootScope.game.players;
+								for(var i=0; i<players.length; i++)
+									$rootScope.notify(players[i].name+' has: $'+players[i].money)
+							}else if($rootScope.game.step == 0){
+								var tile = tools.tile.get(cmd)
+								if(tile){
+									tools.tile.focus(me, tile)
+									$rootScope.$apply();
+								}
+							}else if($rootScope.game.step == 1){
+								var cs = tools.corp.list();
+								for(var i=0; i<cs.length; i++){
+									var ttl = cs[i].title.toUpperCase();
+									var sym = cs[i].symbol.toUpperCase();
+									$rootScope.$apply(function(){
+										if(cmd.indexOf(ttl) != -1 || ttl.indexOf(cmd) !=-1)
+											tools.corp.buyStock(cs[i], me)
+										else if(alt.indexOf(sym) != -1 || sym.indexOf(alt) !=-1)
+											tools.corp.buyStock(cs[i], me)
+									})
+								}
+							}
+						}
+					}
+				}
+			}
+			recognition.start();
 		},
 		abc:'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*abcdefghijklmnopqrstuvwxyz',
 		tileName:function(x,y){
@@ -283,7 +389,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				var playerFound = false;
 				var pendingFound = false;
 
-				// console.log(g.players)
+				debug(g.players)
 				if(g.players)
 					for(var i=0; i<g.players.length; i++)
 						if(g.players[i].objectId==$rootScope.user.objectId)
@@ -348,7 +454,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 			save:function(){
 				$rootScope.$broadcast('newGame');
 				$('#setupModal').modal('hide');
-				// console.log('save',$rootScope.temp.game.category)
+				debug('save',$rootScope.temp.game.category)
 				$rootScope.game.category = angular.copy($rootScope.temp.game.category);
 				$rootScope.game.settings = angular.copy($rootScope.temp.game);
 				$rootScope.game.settings.category = null;
@@ -377,7 +483,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if($rootScope.temp.purchases){
 					for(var i=0; i<$rootScope.temp.purchases.length; i++){
 						var purchase = $rootScope.temp.purchases[i];
-						// console.log('purchase',purchase)
+						debug('purchase',purchase)
 						if(purchases[purchase.corp.i])
 							purchases[purchase.corp.i]++;
 						else
@@ -517,8 +623,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 			get:function(ref){
 				var x = tools.abc.indexOf(ref[0])
 				var y = ref.substr(1,2)-1;
-				console.log(x,y);
-				return $rootScope.game.board[x][y];
+				if($rootScope.game.board[x])
+					return $rootScope.game.board[x][y];
 			},
 			list:function(){
 				var board = $rootScope.game.board;
@@ -567,10 +673,15 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(eog)
 					tools.game.end();
 			},
-			focus:function(player, tile, callback){
+			focus:function(player, tile){
 				if(tools.player.isMyTurn(player)){
 					if(tools.game.step()==0)
-						tools.tile.place(player, tile, callback)
+						tools.tile.place(player, tile).then(function(result){
+							if(result.message)
+								$rootScope.notify(result.status, result.message)
+						},function(result){
+							$rootScope.notify(result.status, result.message)
+						})
 					else if(tools.game.step()==1)
 						if(tile.corp!=undefined)
 							tools.corp.buyStock(tools.corp.get(tile.corp), player)
@@ -598,76 +709,60 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					}
 				}
 			},
-			place:function(player, tile, callback){
-				// console.log('PLACE TILE:::',player,tile)
-				if(player && tile){
-				// if(player && tile && !tile.onBoard){
-					if(tools.player.isMyTurn(player)){
-						if(tools.game.step()==0){
-							if(tile.owner==player.objectId){
-								var neighborStats = this.neighborStats(tile)
-								console.debug('neighborStats',JSON.stringify(neighborStats));
-								if(neighborStats.corporations.length>1){//Merge corps
-									tile.onBoard=true;
-									$rootScope.game.lastTile = tile;
-									$rootScope.game.mergers = neighborStats.corporations;
-									tools.game.step(player, 1);
-									if(callback){//For AI
-										callback('success', 'merger');
-									}else//For Human
-										tools.merge.mergeCorpModal();
+			place:function(player, tile, auto){
+				var deferred = $q.defer();
+				var isHuman = !player.isComputer;
+				if(!player || !tile)
+					deferred.reject({status:'error', code:'notDefined', message:'Something was not defined.'});
+				else if(tile.onBoard)
+					deferred.reject({status:'error', code:'alreadyPlaced', message:'Someone already placed that tile.'});
+				else if(!tools.player.isMyTurn(player))
+					deferred.reject({status:'error', code:'notYourTurn', message:'It is not your turn.'});
+				else if(tools.game.step()!=0)
+					deferred.reject({status:'error', code:'wrongStep', message:'You only place one tile at the beginning of your turn.'});
+				else if(tile.owner!=player.objectId)
+					deferred.reject({status:'error', code:'doesNotHave', message:'You do not have that tile.'});
+				else{
+					var neighborStats = this.neighborStats(tile)
+					debug('neighborStats',JSON.stringify(neighborStats));
+					if(neighborStats.corporations.length>1){//Merge corps
+						tile.onBoard=true;
+						$rootScope.game.lastTile = tile;
+						$rootScope.game.mergers = neighborStats.corporations;
+						tools.game.step(player, 1);
+						if(isHuman)
+							tools.merge.mergeCorpModal();
+						deferred.resolve({status:'success', code:'merger', message:'You just started a merger!'});
 
-								}else if(neighborStats.corporations.length==1){//set tile and neighbors to same corp
-									tile.onBoard=true;
-									$rootScope.game.lastTile = tile;
-									this.setCorp(neighborStats.corporations[0].i)
-									tools.game.step(player, 1);
-									if(callback){//For AI
-										callback('success', 'noAction');
-									}
+					}else if(neighborStats.corporations.length==1){//set tile and neighbors to same corp
+						tile.onBoard=true;
+						$rootScope.game.lastTile = tile;
+						this.setCorp(neighborStats.corporations[0].i)
+						tools.game.step(player, 1);
+						deferred.resolve({status:'success', code:'noAction'});
 
-								}else if(neighborStats.onBoard.length>0){
-									if(tools.corp.listAvail().length>0){//place corp
-										tile.onBoard=true;
-										$rootScope.game.lastTile = tile;
-										tools.game.step(player, 1);
-										if(callback){//For AI
-											callback('success', 'placeCorp');
-										}else//For Human
-											tools.corp.placeCorpModal();
+					}else if(neighborStats.onBoard.length>0){
+						if(tools.corp.listAvail().length>0){//place corp
+							tile.onBoard=true;
+							$rootScope.game.lastTile = tile;
+							tools.game.step(player, 1);
+							if(isHuman)
+								tools.corp.placeCorpModal();
+							deferred.resolve({status:'success', code:'placeCorp', message:'You get to place a corporation!'});
 
-									}else{//Can not place corp
-										tile.onBoard=false;
-										if(callback){//For AI
-											callback('error', 'noNewCorp');
-										}else//For Human
-											$rootScope.notify('error','You can not place that tile at this time because all corporations are on the board.')
-									}
-								}else{//Loner Tile
-									tile.onBoard=true;
-									$rootScope.game.lastTile = tile;
-									tools.game.step(player, 1);
-									if(callback){//For AI
-										callback('success', 'noAction');
-									}
-								}
-								// if(tile.onBoard){
-								// 	this.pickup(player, callback);//Technically they will 'pickup a tile' after they purchase stock (right before ending their turn.)
-								// }
-								$rootScope.$broadcast('saveGame');
-							}
-						}else{
-							if(callback)
-							callback('error', 'We are not on this step.');
+						}else{//Can not place corp
+							tile.onBoard=false;
+							deferred.reject({status:'error', code:'noNewCorp', message:'You can not place that tile at this time because all corporations are on the board.'});
 						}
-					}else{
-						if(callback)
-							callback('error', 'It is not your turn.');
+					}else{//Loner Tile
+						tile.onBoard=true;
+						$rootScope.game.lastTile = tile;
+						tools.game.step(player, 1);
+						deferred.resolve({status:'success', code:'noAction'});
 					}
-				}else{
-					if(callback)
-						callback('error', 'Something went wrong w/ the player or tile is already on the board.');
 				}
+				
+				return deferred.promise;
 			},
 			neighborStats:function(tile){
 				if(typeof(tile)!='object')
@@ -692,7 +787,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				return collection;
 			},
 			setCorp:function(corpIndex){
-				// console.log('setCorp',corpIndex)
+				debug('setCorp',corpIndex)
 				if(corpIndex!=undefined && $rootScope.game.lastTile){
 					this.setNeighbors(corpIndex, $rootScope.game.lastTile);
 				}
@@ -815,7 +910,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				tools.tile.setCorp(corp.i);
 				var message = 'Placed: '+corp.title
 					tools.message(player, 'message', message);
-				// console.log(message)
+				debug(message)
 				tools.corp.brokerStock(corp, player, 0, callback);
 				$('#placeCorpModal').modal('hide');
 				ga('send', 'event', 'game', 'place', corp.title);
@@ -874,8 +969,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				tools.corp.buy(corp, player, false, true, callback);
 			},
 			buy:function(corp, player, priceOverride, isPurchase, callback){
-				// console.log(player.name+' is purchasing Stock: '+corp.title);
-				// console.log('buy',corp,player,callback)
+				debug(player.name+' is purchasing Stock: '+corp.title);
+				debug('buy',corp,player,callback)
 				if(!isPurchase || (tools.player.isMyTurn(player) && tools.game.step()==1)){
 					if($rootScope.game.purchases<3){
 						if(corp && player){
@@ -907,7 +1002,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 											if(callback)
 												callback('success','Purchase successful!');
 										}else{
-											console.log('!!!!!!!!Is NOT a purchase!')
+											debug('!!!!!!!!Is NOT a purchase!')
 										}
 									}else{
 										if(callback)
@@ -945,7 +1040,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					else
 						$rootScope.notify('error','You can not purchase at this time.')
 				}
-				// console.log(+tools.game.step()+' '+tools.player.isMyTurn(player));
+				debug(+tools.game.step()+' '+tools.player.isMyTurn(player));
 			},
 			purchasePush:function(purchase){
 				if(!$rootScope.temp.purchases)
@@ -1286,7 +1381,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				}
 			},
 			leave:function(player){
-				// console.log('leave',player)
+				debug('leave',player)
 				if(!player){
 					tools.game.viewOnly();
 					$rootScope.game=null;
@@ -1399,6 +1494,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(player.audio!=0){
 					tools.playAudio(player.audio);
 					$rootScope.notify('Its your turn!');
+					if(tools.player.me().vocalize)
+						tools.speech();
 					if(document.webkitHidden)
 						alert('Hey, where did you go?  It is your turn!')
 				}
@@ -1422,7 +1519,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 		ai:{
 			turn:function(player){
 				tools.ai.countAllStocks();
-				// console.log('starting my turn: '+player.name)
+				debug('starting my turn: '+player.name)
 				$rootScope.$apply();
 				tools.ai.placeTile(player);
 			},
@@ -1438,27 +1535,18 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				var ranks = tools.ai.rankTiles(player);
 				var maxRank = ranks.max();
 				var tileToPlace = myTiles.splice(ranks.indexOf(maxRank), 1)[0];
-				console.log('placeTile',myTiles,ranks,maxRank,tileToPlace)
+				debug('placeTile',myTiles,ranks,maxRank,tileToPlace)
 
-				//rank tiles
-				// console.log('place tile, turn==player.i???',$rootScope.game.turn, player.i)
-				tools.tile.place(player, tileToPlace, function(status, message){
-					// console.log('AI: '+message)
-					//s:merger,s:noAction,s:placeCorp,e:noNewCorp,s:noAction,e,[messages]
-					if(status=='success'){
-						if(message=='merger'){
-							tools.ai.chooseMerger(player);
-						}else if(message=='placeCorp'){
-							tools.ai.chooseNewCorp(player);
-						}else{
-							// console.log('success nothing new...', status, message)
-							tools.ai.chooseBuyStock(player);
-						}
+				tools.tile.place(player, tileToPlace, true).then(function(response){
+					if(response.code=='merger'){
+						tools.ai.chooseMerger(player);
+					}else if(response.code=='placeCorp'){
+						tools.ai.chooseNewCorp(player);
 					}else{
-						if(!$rootScope.game.final)
-							tools.ai.endTurn(player);
-						// console.debug('AI: '+message)
+						tools.ai.chooseBuyStock(player);
 					}
+				}, function(response){
+					tools.ai.chooseBuyStock(player);
 				});
 			},
 			rankTiles:function(player){
@@ -1490,7 +1578,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 
 					if(nStats.corporations.length>1){	//If tile merges corps
 						var lesserMerger = tools.merge.lesserMerger(nStats.corporations);
-						// console.log('Tile Merges Corps![player,corps,hasMaj,money]',player,nStats.corporations,tools.player.hasMaj(player, lesserMerger[c]),player.money)
+						debug('Tile Merges Corps![player,corps,hasMaj,money]',player,nStats.corporations,tools.player.hasMaj(player, lesserMerger[c]),player.money)
 						for(var c=0; c<lesserMerger.length; c++){
 							if(tools.player.hasMaj(player, lesserMerger[c])){
 								var majMin = tools.corp.majMin(lesserMerger[c]);
@@ -1551,14 +1639,17 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(typeof(player)!='object')
 					player = tools.player.get(player);
 				var tileRanks = tools.ai.rankTiles(player);
-				// console.log('TESTING: canPlaceTile',tileRanks, tileRanks.max()==-2000,tileRanks.length==0)
-				if($rootScope.game.lastTile && $rootScope.game.lastTile.owner==player.objectId){// They can't if they already placed a tile
-					// console.log('returning false:: they can not place any tiles')
-					return false
-				}else{
-					// console.log('returning tileranks.length!=0 && tileranks.max()!=-2000', tileRanks.length, tileRanks.max())
-					return tileRanks.length!=0 && tileRanks.max()!=-2000;
-				}
+				
+				var reason = false;
+				if(!$rootScope.game)
+					reason = 'There is no game.'
+				if(!reason && tools.player.tiles(player).length==0)
+					reason = 'You do not have any tiles to place.'
+				if(!reason && $rootScope.game.lastTile && $rootScope.game.lastTile.owner==player.objectId)
+					reason = 'You already placed a tile.'
+				if(!reason && tileRanks.max()==-2000)
+					reason = 'All your tiles currently perform an illegal operation.'
+				return !reason;
 			},
 			chooseNewCorp:function(player){
 				tools.ai.countAllStocks();
@@ -1567,11 +1658,11 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 
 				var corpsAvail = tools.corp.listAvail();
 				var myCorpStats = tools.ai.rankPlaceCorp(player);
-				// console.log('TESTING: chooseNewCorp',myCorpStats,corpsAvail)
+				debug('TESTING: chooseNewCorp',myCorpStats,corpsAvail)
 				var max = myCorpStats.max();
 				var ctpi = myCorpStats.indexOf(max);
 				tools.corp.place(tools.corp.get(ctpi), player, function(){
-					// console.log('corp placed!');
+					debug('corp placed!');
 					tools.ai.chooseBuyStock(player);
 				})
 			},
@@ -1580,7 +1671,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 				if(typeof(player)!='object')
 					player = tools.player.get(player);
 
-				// console.log('AI: Choose Corp');
+				debug('AI: Choose Corp');
 				var mergers = $rootScope.game.mergers;
 				var dominantMerger = tools.merge.dominantMerger(mergers);
 
@@ -1599,9 +1690,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					corpChosen = tools.corp.get(dominantMerger[0]);
 
 				tools.merge.corp(corpChosen, player, function(status, message){
-					// console.log('AI: ChooseMerger: ',status,message)
+					debug('AI: ChooseMerger: ',status,message)
 					if(status=='success'){
-						// console.log('Yay!  Now we will wait for an update to trigger our chooseTradeSell');
+						debug('Yay!  Now we will wait for an update to trigger our chooseTradeSell');
 					}else{
 						alert('There was an ai error choosing the merger.');
 					}
@@ -1648,7 +1739,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 							tools.ai.chooseTradeSell(player);
 						})
 					}else if(action=='trade'){
-						console.log('AI is trading!')
+						debug('AI is trading!')
 						tools.merge.trade(player, function(){
 							tools.ai.chooseTradeSell(player);
 						})
@@ -1678,19 +1769,19 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 							var amountToBuy = bestBuy.data[bestBuy.target];
 
 							tools.corp.buyStock(bestBuy.corp, player, function(status, message){
-								// console.log(status,message)
+								debug(status,message)
 								if(status!='error')
 									tools.ai.chooseBuyStock(player);
 							});
 						}else{
-							// console.log('Nao vou comprar esta vez');
+							debug('Nao vou comprar esta vez');
 							tools.ai.endTurn(player);
 						}
 					// }else{
 					// 	tools.ai.endTurn(player);
 					// }
 				}else{
-					// console.log('ja tenho comprido o maximo')
+					debug('ja tenho comprido o maximo')
 				}
 				tools.ai.countAllStocks();
 			},
@@ -1784,7 +1875,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 					rankings: rankings,
 					targets: targets
 				}
-				// console.log('purchase rankings: ',player,result)
+				debug('purchase rankings: ',player,result)
 				return result;
 			},
 			tile:function(ref){
@@ -1867,12 +1958,12 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 							cTotal += player.stock[c].length
 					}
 					if(cTotal!=$rootScope.game.settings.stock)
-						console.debug(corp.title+' only has: '+cTotal+' stock')
+						console.error(corp.title+' only has: '+cTotal+' stock')
 				}
 			},
 			akct: 1,
 			allKnowing:function(ct){
-				// console.log('ak:'+ct)
+				debug('ak:'+ct)
 				if((this.akct==0 && ct==1) || ct == 3)
 					$('#fullStatsModal').modal('show');
 				this.akct=ct

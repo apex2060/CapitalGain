@@ -1,0 +1,27 @@
+<div class="modal" id="trainingModal" ng-class="{'minModal': tools.display.minModal()}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" ng-click="tools.display.toggleModal()">
+				<button type="button" class="close" aria-hidden="true">-</button>
+				<h4 class="modal-title">Voice Training</h4>
+			</div>
+			<div class="modal-body willMin">
+				<div class="jumbotron">
+					<h1>{{train.action}} {{train.value}}</h1>
+				</div>
+				<table class="table">
+					<tbody>
+						<tr ng-repeat="option in train.options">
+							<td ng-click="tools.train.remove(option)">
+								<span>{{option}}</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer willMin" style="text-align:left;">
+				<p><a>Save</a></p>
+			</div>
+		</div>
+	</div>
+</div>
