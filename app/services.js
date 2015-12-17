@@ -298,7 +298,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 				for(var i=event.resultIndex; i<event.results.length; i++){
 					var options = event.results[i];
 					if(options.isFinal){
-						for(var ii=0; ii<options.length; options++){
+						for(var ii=0; ii<options.length; ii++){
 							var cmd = options[ii].transcript;
 								console.log(cmd);
 								cmd = cmd.trim();
