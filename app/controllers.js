@@ -354,8 +354,8 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 
 		// ======================================GAME TURN ACTIONS=============================================
 		$rootScope.$watch('game.turn', function (turn){
-			if(turn && gameTools.player.me()){
-				if(gameTools.player.get(turn)==gameTools.player.me()){
+			if(turn!=undefined && gameTools.player.me()){
+				if(turn==gameTools.player.me().i){
 					gameTools.player.notify(gameTools.player.me());
 					$rootScope.temp.startOfTurn = moment();
 					$rootScope.temp.clock = setInterval(function(){

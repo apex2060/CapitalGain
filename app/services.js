@@ -300,14 +300,13 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					if(options.isFinal){
 						for(var ii=0; ii<options.length; ii++){
 							var cmd = options[ii].transcript;
-								console.log(cmd);
 								cmd = cmd.trim();
 								cmd = cmd.toUpperCase()
 							var alt = cmd.replace(/\W/g, '')
-								console.log(cmd, alt);
+							console.log(cmd,alt)
 							if(alt == 'INTERN' || cmd == 'END TURN'){
 								tools.player.endTurn(me);
-							}else if(cmd == 'SHOW ME THE MONEY' && $rootScope.game.allowStats){
+							}else if(cmd == 'SHOW ME THE MONEY' && $rootScope.game.settings.allowStats){
 								var players = $rootScope.game.players;
 								for(var i=0; i<players.length; i++)
 									$rootScope.notify(players[i].name+' has: $'+players[i].money)
@@ -323,9 +322,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 									var ttl = cs[i].title.toUpperCase();
 									var sym = cs[i].symbol.toUpperCase();
 									$rootScope.$apply(function(){
-										if(cmd.indexOf(ttl) != -1 || ttl.indexOf(cmd) !=-1)
+										if(cmd.indexOf(ttl) != -1)
 											tools.corp.buyStock(cs[i], me)
-										else if(alt.indexOf(sym) != -1 || sym.indexOf(alt) !=-1)
+										else if(alt.indexOf(sym) != -1)
 											tools.corp.buyStock(cs[i], me)
 									})
 								}
@@ -1491,14 +1490,13 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 			},
 			notify: function(player){
 				tools.display.modalOff();
-				if(player.audio!=0){
+				if(player.audio!=0)
 					tools.playAudio(player.audio);
-					$rootScope.notify('Its your turn!');
-					if(tools.player.me().vocalize)
-						tools.speech();
-					if(document.webkitHidden)
-						alert('Hey, where did you go?  It is your turn!')
-				}
+				$rootScope.notify('Its your turn!');
+				if(tools.player.me().vocalize)
+					tools.speech();
+				if(document.webkitHidden)
+					alert('Hey, where did you go?  It is your turn!')
 			},
 			style:function(player){
 				if(typeof(player)!='object')
