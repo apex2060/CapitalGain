@@ -1603,7 +1603,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						}else if(nStats.onBoard.length>0){	//If tile creates a new corp
 							//// if Would have maj in corp placed.
 							var availRanks = tools.ai.rankPlaceCorp(player)
-							if(availRanks.max() > 0)
+							if(availRanks.max() > 25)
 								rank = 30;
 							else
 								rank = -30
