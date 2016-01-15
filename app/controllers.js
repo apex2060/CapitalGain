@@ -25,7 +25,7 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 	$scope.$on('authError', function(event, message) {
 		$timeout(function(){
 			$rootScope.temp.user={
-				color:'#22AA88'
+				color: chance.color()
 			}
 			fireParse.user.loginModal();
 		}, 2000);

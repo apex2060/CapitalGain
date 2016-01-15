@@ -1195,8 +1195,8 @@ app.factory('gameTools', function ($rootScope, $timeout, $routeParams, ai) {
 		player:{
 			add:function(){
 				$rootScope.temp.player = {
-					"name"       :'Computer '+lib.randomInt(0,99),
-					"color"      :'#'+lib.color.random(),
+					"name"       : chance.name(),
+					"color"      : chance.color(),
 					"money"      :$rootScope.game.settings.startMoney,
 					"audio"      :0,
 					"game"       :$rootScope.game.id,
