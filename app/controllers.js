@@ -14,7 +14,7 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 			delete me.updatedAt
 			var myRef = new Firebase("https://"+config.fbdb+".firebaseio.com/presence/"+me.objectId);
 			myRef.on('value', function(snap){
-				console.log('auth presence',snap.val())
+				debug('auth presence',snap.val())
 				if (snap.val() == null) {
 					myRef.onDisconnect().remove();
 					myRef.set(me);
@@ -153,7 +153,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		//Load Game
 		fbRef.game.once('value', function(snap) { 
 			$rootScope.$apply(function(){
-				// console.log('initial load')
+				debug('initial load')
 				$rootScope.game = snap.val();
 				g.resolve(snap.val())
 				gameTools.game.init();
@@ -161,7 +161,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		});
 		fbRef.game.on('value', function(snap) {
 			var gameUpdate = snap.val();
-			// console.log('Game updated from firebase.')
+			debug('Game updated from firebase.')
 			if(gameUpdate.merger || ($rootScope.game && gameTools.player.me() && $rootScope.game.turn!=gameTools.player.me().i)){
 				if(!$rootScope.$$phase){
 					$rootScope.$apply(function(){
@@ -173,12 +173,12 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 					gameTools.corp.purchaseClear();
 				}
 			}else{
-				console.log(gameUpdate);
+				debug(gameUpdate);
 			}
 		});
 		fbRef.pending.on('value', function(snap) {
 			if($rootScope.game){
-				// console.log('Pending player change.')
+				debug('Pending player change.')
 				$('#sidebar a:first').tab('show');
 				$rootScope.$apply(function(){
 					$rootScope.game.pending = snap.val();
@@ -186,7 +186,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			}
 		});
 		fbRef.board.on('value', function(snap) {
-			// console.log('Board updated from firebase.')
+			debug('Board updated from firebase.')
 			if($rootScope.game){
 				fbRef.game.once('value', function(snap) { 
 					if(!$rootScope.$$phase){
@@ -251,7 +251,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 	//-------------------------------------------------:::OFFLINE MODE:::------------------------------------------------------
 	//-------------------------------------------------:::OFFLINE MODE:::------------------------------------------------------
 	function setupOffline(gameId){
-		// console.log('Setup Offline')
+		debug('Setup Offline')
 		if(localStorage.corps){
 			$rootScope.templateCorps=angular.fromJson(localStorage.corps);
 		}else{
@@ -274,7 +274,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			return gameTools.player.me();
 		}
 		if(localStorage.game){
-			// console.log('Get From localstorage')
+			debug('Get From localstorage')
 			$rootScope.game = angular.fromJson(localStorage.game);
 			gameTools.game.init();
 		}else{
@@ -285,10 +285,10 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 		// Update views when certain actions occure
 		// ======================================GAME PLAYER CHANGES=============================================
 		$rootScope.$watch('game.players', function (players) {
-			// console.log('players changed',players,$rootScope.user.pending)
+			debug('players changed',players,$rootScope.user.pending)
 			if(players){
 				if($rootScope.user.pending){
-					// console.log('I am pending')
+					debug('I am pending')
 					for(var i=0; i<players.length; i++){
 						if(players[i].objectId==$rootScope.user.objectId){
 							$rootScope.user.pending=false;
@@ -322,7 +322,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 						var currentPlayer = gameTools.player.get($rootScope.game.turn);
 						if(currentPlayer.isComputer){
 							$timeout(function(){
-								// console.log('Game: ',JSON.stringify($rootScope.game))
+								debug('Game: ',JSON.stringify($rootScope.game))
 								gameTools.ai.chooseBuyStock($rootScope.game.turn);
 							}, 500);
 						}
@@ -333,7 +333,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 
 		// ======================================GAME MERGER ACTIONS=============================================
 		$rootScope.$watch('game.merger.turn', function (turn){
-			// console.log('game.merger.turn',turn)
+			debug('game.merger.turn',turn)
 			if(gameTools.player.me()){
 				if(turn==gameTools.player.me().i){
 					gameTools.player.notify(gameTools.player.me());
@@ -346,7 +346,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 							}, 500);
 						}
 					}else{
-						console.log('Turn is not defined anymore...')
+						debug('Turn is not defined anymore...')
 					}
 				}
 			}
@@ -354,9 +354,8 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 
 		// ======================================GAME TURN ACTIONS=============================================
 		$rootScope.$watch('game.turn', function (turn){
-			console.log('Turn Change!',turn)
-			if(gameTools.player.me()){
-				if(gameTools.player.get(turn)==gameTools.player.me()){
+			if(turn!=undefined && gameTools.player.me()){
+				if(turn==gameTools.player.me().i){
 					gameTools.player.notify(gameTools.player.me());
 					$rootScope.temp.startOfTurn = moment();
 					$rootScope.temp.clock = setInterval(function(){
@@ -372,7 +371,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 					}
 				}
 			}else{
-				console.log('SWND')
+				debug('SWND')
 			}
 		});
 		$rootScope.$watch('game.final', function (end){

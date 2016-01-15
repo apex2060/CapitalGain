@@ -48,6 +48,7 @@ var lib = {
 	}
 }
 
+
 function notify(status, message, showTime){
 	if(message==undefined){
 		message = status;

@@ -1,5 +1,5 @@
-<div class="cards" ng-show="tools.corp.purchaseList().length">
-	<div class="card purchaseCard">
+<div class="cards">
+	<div class="card purchaseCard" ng-show="tools.corp.purchaseList().length">
 		<h1 title="Purchases">Purchases</h1>
 		<span class="badge">{{game.purchases}}</span>
 		<p></p>
@@ -12,5 +12,8 @@
 			</li>
 		</ul>
 		<a class="btn btn-block btn-warning" ng-click="tools.player.endTurn(me())">End Turn</a>
+	</div>
+	<divs ng-show="!tools.ai.canPlaceTile(me()) && !tools.corp.purchaseList().length">
+		<a class="btn btn-block btn-lg btn-warning" ng-click="tools.player.endTurn(me())">End Turn</a>
 	</div>
 </div>
