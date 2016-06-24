@@ -26,8 +26,14 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 	$scope.$on('authError', function(event, message) {
 		$timeout(function(){
 			$rootScope.temp.user={
-				color: chance.color()
+				email:		chance.email(),
+				color:		chance.color({format: 'hex'}),
+				password:	'open',
+				password1:	'open',
+				rememberMe: true
 			}
+			if(localStorage.getItem('localUser'))
+				$rootScope.temp.user = angular.fromJson(localStorage.getItem('localUser'))
 			fireParse.user.loginModal();
 		}, 2000);
 	});
@@ -42,17 +48,8 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 		});
 	})
 
-	$rootScope.temp={
-		user: {
-			email:		chance.email(),
-			color:		chance.color({format: 'hex'}),
-			password:	'open',
-			password1:	'open',
-			rememberMe: true
-		}
-	};
-	if(localStorage.getItem('localUser'))
-		$rootScope.temp.user = angular.fromJson(localStorage.getItem('localUser'))
+	$rootScope.temp={};
+	
 	$rootScope.theme  = function(theme){
 		document.getElementById('themeCSS').href='/css/themes/'+theme+'.css';
 	};
