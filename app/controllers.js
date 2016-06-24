@@ -1,5 +1,6 @@
 var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routeParams, $timeout, config, fireParse, angularFire){
 	// window.addEventListener("online", function(e) {alert("online");})
+
 	if(navigator.onLine){
 		var userList = new Firebase("https://"+config.fbdb+".firebaseio.com/presence");
 		angularFire(userList, $scope, 'users', []).then(function() {});
@@ -41,7 +42,17 @@ var MainCtrl = app.controller('MainCtrl', function($rootScope, $scope, $routePar
 		});
 	})
 
-	$rootScope.temp={};
+	$rootScope.temp={
+		user: {
+			email:		chance.email(),
+			color:		chance.color({format: 'hex'}),
+			password:	'open',
+			password1:	'open',
+			rememberMe: true
+		}
+	};
+	if(localStorage.getItem('localUser'))
+		$rootScope.temp.user = angular.fromJson(localStorage.getItem('localUser'))
 	$rootScope.theme  = function(theme){
 		document.getElementById('themeCSS').href='/css/themes/'+theme+'.css';
 	};

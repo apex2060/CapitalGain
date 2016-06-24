@@ -72,6 +72,8 @@ app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, co
 				$('#userSignupModal').modal('show');
 			},
 			signup:function(user){
+				if(user.rememberMe)
+					localStorage.setItem('localUser', angular.toJson(user))
 				fireParse.user.signupParse(user)
 			},
 			signupParse:function(user){
