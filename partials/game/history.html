@@ -8,7 +8,11 @@
 		<tr ng-repeat="history in game.history" 
 			title="{{tools.player.get(history.player).name}}"
 			style="{{tools.player.style(history.player)}}">
-			<td>{{tools.player.get(history.player).name}}</td>
+			<td>
+				<span>{{tools.player.get(history.player).name}}</span>
+				<br>
+				<span>{{tools.player.time(history.player)}} Min.</span>
+			</td>
 			<td>
 				<ul>
 					<li ng-repeat="message in history.messages">{{message}}</li>

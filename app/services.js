@@ -474,6 +474,10 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 				$rootScope.game.purchases=0;
 				$rootScope.game.final=null;
 				$rootScope.game.history=[];
+				$rootScope.game.players = $rootScope.game.players.map(function(player){
+					player.timeSpent = []
+					return player;
+				})
 				tools.board.setup();
 				tools.tile.deal();
 				tools.bank.reset();
@@ -1306,7 +1310,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					"isNew"	 :true
 				}
 				$('#playerSettingsModal').modal('show');
-			},
+			}, 
 			edit:function(player){
 				$rootScope.temp.player=player;
 				$('#playerSettingsModal').modal('show');
@@ -1508,6 +1512,16 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						return 'background:'+player.color+'; color:#FFF;';
 					else
 						return 'background:'+player.color+'; color:#000;';
+				}
+			},
+			time: function(player){
+				if(typeof(player)!='object')
+					player = this.get(player);
+				if(player && player.timeSpent){
+					var time = player.timeSpent.reduce(function(pv, cv) {
+							return pv + cv
+						});
+					return Math.round(time/6000)/10;
 				}
 			}
 		},

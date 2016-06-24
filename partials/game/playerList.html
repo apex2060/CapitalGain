@@ -8,7 +8,7 @@
 		<tr ng-repeat="player in game.players" 
 			title="{{player.name}}"
 			style="{{tools.player.style(player)}}">
-			<td>{{player.name}}</td>
+			<td>{{player.name}} - {{tools.player.time(player)}}</td>
 			<td>
 				<div ng-show="tools.player.isHost(me()) || tools.player.isOwner()">
 					<a class="btn" ng-class="{'btn-info':!player.isComputer, 'btn-success':player.isComputer}" title="Set to auto-pilot" ng-click="tools.player.toggleComputer(player)"><i class="fa fa-laptop"></i></a>
