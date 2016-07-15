@@ -1615,14 +1615,18 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 							rank = -20
 					}else{
 						if(nStats.oponentPlaced.length>0){	//If oponent placed tile next to one that I have
-							rank = 50;
+							var availRanks = tools.ai.rankPlaceCorp(player)
+							if(availRanks.max() > 25)
+								rank = 50;
+							else
+								rank = -30
 						}else if(nStats.onBoard.length>0){	//If tile creates a new corp
 							//// if Would have maj in corp placed.
 							var availRanks = tools.ai.rankPlaceCorp(player)
 							if(availRanks.max() > 25)
 								rank = 30;
 							else
-								rank = -30
+								rank = -50
 						}else if(nStats.onBench.length>0){	//If creates a possibility
 							rank = 20;
 						}else if(neighbors.length==2){		//If tile is in corner
@@ -1711,6 +1715,19 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						alert('There was an ai error choosing the merger.');
 					}
 				});
+			},
+			returnRatio:function(player){
+				//If i have a tile that will create a company
+				//how many tiles can make a company?
+				//how many players are there?
+				//how many tiles are available?
+				//how many companies are not on the board?
+				var nonExpanding = tools.tile.listAvail().filter(function(tile){
+					return tools.tile.neighborStats(tile).hasCorp.length == 0
+				})
+				return {
+					nonExpanding: nonExpanding
+				}
 			},
 			chooseTradeSell:function(player){
 				tools.ai.countAllStocks();
