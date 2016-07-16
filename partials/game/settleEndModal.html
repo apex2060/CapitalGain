@@ -14,7 +14,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="player in game.players" 
+						<tr ng-repeat="player in game.players | orderBy:'money'" 
 							title="{{player.name}}"
 							style="{{tools.player.style(player)}}">
 							<td>{{player.name}}</td>
