@@ -1593,6 +1593,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					if(nStats.corporations.length>1){	//If tile merges corps
 						var lesserMerger = tools.merge.lesserMerger(nStats.corporations);
 						debug('Tile Merges Corps![player,corps,hasMaj,money]',player,nStats.corporations,tools.player.hasMaj(player, lesserMerger[c]),player.money)
+						rank = -30;
 						for(var c=0; c<lesserMerger.length; c++){
 							if(tools.player.hasMaj(player, lesserMerger[c])){
 								var majMin = tools.corp.majMin(lesserMerger[c]);
@@ -1604,6 +1605,23 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 									}else{
 										rank = -50
 									}
+							}else if(tools.player.hasMin(player, lesserMerger[c])){
+								var majMin = tools.corp.majMin(lesserMerger[c]);
+								var h = majMin.majSH.filter(function(i){
+									return !tools.player.get(i).isComputer
+								})
+								if(h.length){
+									rank = -70
+								}else{
+									if(majMin.minSH.length == 1)
+										rank = 80;
+									else
+										if(player.money<3000){
+											rank = 70
+										}else{
+											rank = -60
+										}
+								}
 							}else{
 								rank = -100
 							}
@@ -1716,55 +1734,107 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					}
 				});
 			},
-			returnRatio:function(player){
-				//If i have a tile that will create a company
-				//how many tiles can make a company?
-				//how many players are there?
-				//how many tiles are available?
-				//how many companies are not on the board?
-				var nonExpanding = tools.tile.listAvail().filter(function(tile){
-					return tools.tile.neighborStats(tile).hasCorp.length == 0
+			corpReturnRatio:function(){
+				var notOnBoard = tools.tile.list().filter(function(tile){
+					return tile.onBoard == false
 				})
-				return {
-					nonExpanding: nonExpanding
-				}
+				var loners = notOnBoard.filter(function(tile){
+					var ns = tools.tile.neighborStats(tile);
+					return ns.hasCorp.length == 0 && ns.onBoard.length == 0;
+				})
+				var willCreate = notOnBoard.filter(function(tile){
+					var ns = tools.tile.neighborStats(tile);
+					return ns.hasCorp.length == 0 && ns.onBoard.length > 0
+				})
+				var twoStep = loners.filter(function(tile){
+					var possible = tools.tile.neighbors(tile).filter(function(neighbor){
+						var ns = tools.tile.neighborStats(neighbor);
+						return ns.hasCorp.length == 0;
+					})
+					return possible.length > 0
+				})
+				return (willCreate.length + twoStep.length) / (tools.corp.listAvail().length + $rootScope.game.players.length) 
 			},
 			chooseTradeSell:function(player){
 				tools.ai.countAllStocks();
 				if(typeof(player)!='object')
 					player = tools.player.get(player);
-				var leaving = tools.merge.leaving();
-				var staying = tools.merge.staying();
-				var action = 'keep';
-				if(player.stock[leaving.i] && player.stock[leaving.i].length>0){
-					var tileRatio = it.GameCtrl.tools.tile.listAvail().length/it.GameCtrl.tools.tile.list().length*100;
-					if(tileRatio<50){
-						if(it.gameTools.corp.listAvail().length>1)
-							action = 'sell'
-					}else if(tileRatio<30){
-						if(it.gameTools.corp.listAvail().length>1)
-							action = 'sell'
-					}else if(tileRatio<25){
-						if(it.gameTools.corp.listAvail().length>1)
-							action = 'sell'
-					}else if(tileRatio<18){
-						//if rank tiles == 50|75 we may want to keep...
+				var leaving 	= tools.merge.leaving();
+				var leavingStat = tools.corp.majMin(leaving);
+				var staying 	= tools.merge.staying();
+				var stayingStat = tools.corp.majMin(staying);
+				var action		= 'keep';
+				var returnRatio = tools.ai.corpReturnRatio();
+				if(player.stock[leaving.i])
+					var myStockCt = player.stock[leaving.i].length
+				if(myStockCt){
+					var leavingRatio = leavingStat.majority / leaving.stock
+					var majLeavingCt = tools.corp.majMin(leaving).majority;
+					var needToObtain = (majLeavingCt-myStockCt);
+					
+					if(returnRatio < 0.5){
 						action = 'sell'
+					}else if(returnRatio < 1){ //If there is a low chance of it returning
+						//console.log('Low chance of returning')
+						if(myStockCt == leavingStat.majority){
+							//console.log('I have majority or minority')
+							action = 'keep'
+						}else{
+							//console.log('I do not have majority or minority')
+							action = 'sell'
+						}
+					}else if(returnRatio < 2){ //If there is a change of it returning
+						//console.log('Medium chance of returning')
+						//I want to sell unless: I have the majority || I have money to buy more when it is placed. & I can become the majority
+						if(myStockCt == leavingStat.majority){
+							//console.log('I have majority')
+							action = 'keep'
+						}else if(player.money > (tools.corp.value(leaving).cost * needToObtain)){ //If I have the money to obtain majority
+							if(needToObtain < leaving.stock){
+								//console.log('I have the money and could obtain majority')
+								action = 'keep'
+							}else{
+								//console.log('I can not achieve majority')
+								action = 'sell'
+							}
+						}else{
+							//console.log('I do not have maj/min and I do not have the money.')
+							action = 'sell'
+						}
+					}else{ //it is likely to return.
+						//console.log('High chance of returning')
+						if(myStockCt > leavingStat.minority){
+							action = 'keep'
+						}else{
+							if(leaving.stock > ($rootScope.game.settings.stock / 2) && needToObtain < leaving.stock){
+								//console.log('There is not much invested in this particular.')
+								action = 'keep'
+							}else{
+								//console.log('Too many have already been purchased')
+								action = 'sell'
+							}
+						}
 					}
-
-					var opp = tools.ai.myCorpStats(player.i)[staying.i].data;
+					
 					var myStockCt = player.stock[leaving.i].length;
+					var opp = tools.ai.myCorpStats(player.i)[staying.i].data;
 					if(action=='sell'){
 						if(myStockCt>1 && staying.stock>0){
 							if(opp.secureMaj>0 || opp.obtainMaj>0){
 								if(myStockCt/2 >= opp.secureMaj)
 									action='trade';
-								if(myStockCt/2 >= opp.obtainMaj)
+								else if(myStockCt/2 >= opp.obtainMaj)
 									action='trade';
+								else if(myStockCt/2 >= opp.secureMin)
+									action='trade'
+								else if(myStockCt/2 >= opp.obtainMin)
+									action='trade'
+							}else if(staying.stock + $rootScope.game.settings.buysPerTurn*2 > $rootScope.game.settings.stock){
+								action='trade'
 							}
 						}
 					}
-
+					
 					if(action=='sell'){
 						tools.merge.sell(player, function(){
 							tools.ai.chooseTradeSell(player);
@@ -1805,8 +1875,23 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 									tools.ai.chooseBuyStock(player);
 							});
 						}else{
-							debug('Nao vou comprar esta vez');
-							tools.ai.endTurn(player);
+							var otherOpp = tools.corp.listOnBoard().filter(function(corp){
+								return corp.stock >= $rootScope.game.settings.stock / 3
+							})
+							if(otherOpp.length){
+								var ctb = otherOpp[lib.randomInt(0,otherOpp.length-1)]
+								console.log(ctb)
+								tools.corp.buyStock(ctb, player, function(status, message){
+									debug(status,message)
+									if(status!='error')
+										tools.ai.chooseBuyStock(player);
+									else
+										tools.ai.endTurn(player);
+								});
+							}else{
+								debug('Nao vou comprar esta vez');
+								tools.ai.endTurn(player);
+							}
 						}
 					// }else{
 					// 	tools.ai.endTurn(player);
