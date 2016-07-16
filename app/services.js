@@ -1880,7 +1880,6 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 							})
 							if(otherOpp.length){
 								var ctb = otherOpp[lib.randomInt(0,otherOpp.length-1)]
-								console.log(ctb)
 								tools.corp.buyStock(ctb, player, function(status, message){
 									debug(status,message)
 									if(status!='error')
