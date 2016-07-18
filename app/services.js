@@ -1753,7 +1753,10 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					})
 					return possible.length > 0
 				})
-				return (willCreate.length + twoStep.length) / (tools.corp.listAvail().length + $rootScope.game.players.length) 
+				if(tools.corp.listAvail().length)
+					return (willCreate.length + twoStep.length) / (tools.corp.listAvail().length + $rootScope.game.players.length) 
+				else
+					return 0.05;
 			},
 			chooseTradeSell:function(player){
 				tools.ai.countAllStocks();
@@ -1765,7 +1768,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 				var stayingStat = tools.corp.majMin(staying);
 				var action		= 'keep';
 				var returnRatio = tools.ai.corpReturnRatio();
-				if(player.stock[leaving.i])
+				if(player.stock && player.stock[leaving.i])
 					var myStockCt = player.stock[leaving.i].length
 				if(myStockCt){
 					var leavingRatio = leavingStat.majority / leaving.stock
