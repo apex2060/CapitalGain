@@ -1809,7 +1809,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						if(myStockCt > leavingStat.minority){
 							action = 'keep'
 						}else{
-							if(leaving.stock > ($rootScope.game.settings.stock / 2) && needToObtain < leaving.stock){
+							if(myStockCt >= leavingStat.minority){
+								action = 'keep'
+							}else if(leaving.stock > ($rootScope.game.settings.stock / 2) && needToObtain < leaving.stock){
 								//console.log('There is not much invested in this particular.')
 								action = 'keep'
 							}else{
