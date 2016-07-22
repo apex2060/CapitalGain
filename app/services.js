@@ -1806,7 +1806,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						}
 					}else{ //it is likely to return.
 						//console.log('High chance of returning')
-						if(myStockCt > leavingStat.minority){
+						if(myStockCt >= leavingStat.minority){
 							action = 'keep'
 						}else{
 							if(myStockCt >= leavingStat.minority){
