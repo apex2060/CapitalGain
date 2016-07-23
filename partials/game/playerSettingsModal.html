@@ -29,6 +29,7 @@
 						<label for="userAdvance" class="col-lg-3 control-label">Vocalize Prompts</label>
 						<div class="col-lg-9">
 							<input type="checkbox" ng-model="temp.player.vocalize">
+							<select ng-options="voice.name for voice in voices" ng-model="temp.player.voice"></select>
 							<!--<p ng-click="tools.train.init()">Train Speech Recognition</p>-->
 						</div>
 					</div>

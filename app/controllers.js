@@ -82,6 +82,7 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 	var fbRef = {}
 	var g = $q.defer();
 	$rootScope.me 		= gameTools.player.me;
+	$rootScope.voices	= speechSynthesis.getVoices();
 	$rootScope.moment 	= moment;
 	$rootScope.notify 	= function(status, message, showTime){
 		notify(status, message, showTime);
@@ -90,9 +91,8 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 			status = undefined;
 		}
 		if(gameTools.player.me() && gameTools.player.me().vocalize){
-			var voices = speechSynthesis.getVoices();
 			var msg = new SpeechSynthesisUtterance();
-				msg.voice = voices[1];
+				msg.voice = $rootScope.me.voice;
 				msg.text = message;
 		    window.speechSynthesis.speak(msg);
 		}
@@ -380,6 +380,30 @@ var GameCtrl = app.controller('GameCtrl', function($rootScope, $scope, $routePar
 				}
 			}else{
 				debug('SWND')
+			}
+		});
+		var lastRead = '';
+		$rootScope.$watch('game.history', function (history){
+			if(history){
+				var len = history.length
+				if(len){
+					var lastEvent = history[len-1]
+					if(lastRead != lastEvent.round+lastEvent.player){
+						lastRead = lastEvent.round+lastEvent.player
+						var player = gameTools.player.get(lastEvent.player);
+						if(lastEvent.messages && lastEvent.messages.length){
+							var message = player.name+' '+lastEvent.messages[0];
+							for(var i=1; i<lastEvent.messages.length; i++){
+								message += ' and '+lastEvent.messages[i]
+							}
+							var msg = new SpeechSynthesisUtterance();
+							msg.voice = $rootScope.me.voice;
+							msg.text = message;
+							msg.rate = 0.5;
+							window.speechSynthesis.speak(msg);
+						}
+					}
+				}
 			}
 		});
 		$rootScope.$watch('game.final', function (end){

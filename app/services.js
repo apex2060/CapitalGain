@@ -8,6 +8,7 @@ app.factory('config', function () {
 	}
 });
 
+
 app.factory('fireParse', function ($rootScope, $timeout, $routeParams, $http, config) {
 	/*
 	 *	REQUIRES:
@@ -186,7 +187,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 			var timeStamp = new Date();
 			if(!$rootScope.temp)
 				$rootScope.temp={};
-			if(!$rootScope.temp.history)
+			if(!$rootScope.temp.history || $rootScope.temp.history.player != player.i)
 				$rootScope.temp.history = {
 					round:$rootScope.game.round,
 					player:player.i,
@@ -203,12 +204,10 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					}
 				}
 			}else{
-				if(!$rootScope.temp.history)
-					$rootScope.temp.history = [{messages: 'Nothing...', player: player.i}]
 				if(type=='end'){
 					if(!$rootScope.game.history)
 						$rootScope.game.history = [];
-					$rootScope.game.history.push($rootScope.temp.history)
+					$rootScope.game.history.push($rootScope.temp.history);
 					$rootScope.temp.history = null;
 				}else{
 					if(!$rootScope.temp.history.messages)
@@ -497,7 +496,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 				}
 				for(var i=0; i<purchases.length; i++)
 					if(purchases[i])
-						tools.message(player, 'message', 'Purchased '+purchases[i]+' stock in: '+tools.corp.get(i).symbol);
+						tools.message(player, 'message', 'Purchased '+purchases[i]+' stock in: '+tools.corp.get(i).title);
 					
 					// var message = 'Purchased stock in: '+corp.title
 
@@ -1210,9 +1209,9 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 						leaving.stock+=2;
 						player.money += price;
 						tools.corp.brokerStock(staying, player, price, callback)
-						tools.message(player, 'merger','Traded 2 '+leaving.symbol+' - for 1 '+staying.symbol)
+						tools.message(player, 'merger','Traded 2 '+leaving.title+' - for 1 '+staying.title)
 						if(callback)
-							callback('success', 'Traded 2 '+leaving.symbol+' - for 1 '+staying.symbol)
+							callback('success', 'Traded 2 '+leaving.title+' - for 1 '+staying.title)
 					}else{
 						if(callback)
 							callback('error','You do not own enough stock to trade')
@@ -1232,7 +1231,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					player.stock[leaving.i].pop();
 					player.money  += tools.corp.value(leaving).cost;
 					leaving.stock++;
-					tools.message(player, 'merger', 'Sold a stock in: '+leaving.symbol)
+					tools.message(player, 'merger', 'Sold a stock in: '+leaving.title)
 				}
 				if(callback)
 					callback()
@@ -1753,10 +1752,12 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					})
 					return possible.length > 0
 				})
-				if(tools.corp.listAvail().length)
-					return (willCreate.length + twoStep.length) / (tools.corp.listAvail().length + $rootScope.game.players.length) 
+				if(tools.corp.listAvail())
+					var avail = tools.corp.listAvail().length++;
 				else
-					return 0.05;
+					var avail = 1
+					
+				return (willCreate.length + twoStep.length) / (avail + $rootScope.game.players.length)
 			},
 			chooseTradeSell:function(player){
 				tools.ai.countAllStocks();
@@ -1774,7 +1775,7 @@ app.factory('gameTools', function ($rootScope, $timeout, $q, $routeParams, ai) {
 					var leavingRatio = leavingStat.majority / leaving.stock
 					var majLeavingCt = tools.corp.majMin(leaving).majority;
 					var needToObtain = (majLeavingCt-myStockCt);
-					
+
 					if(returnRatio < 0.5){
 						action = 'sell'
 					}else if(returnRatio < 1){ //If there is a low chance of it returning
